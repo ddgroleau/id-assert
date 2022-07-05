@@ -1,0 +1,13 @@
+package com.identity.api;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class IdAssertApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(IdAssertApplication.class, args);
+	}
+
+}
