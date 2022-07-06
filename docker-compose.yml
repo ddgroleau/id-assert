@@ -3,6 +3,7 @@ version: '3.8'
 services:
   api:
     image: dangroleau/id-assert
+    container_name: id-assert
     ports:
       - "8080:8080"
     depends_on:
@@ -13,6 +14,10 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/id_assert
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
+      - CLIENT_ID=id-assert
+      - CLIENT_SECRET=secret
+      - REDIRECT_URI=http://127.0.0.1:8080
+      - ISSUER_URI=http://127.0.0.1:8080
   postgresql:
     container_name: postgres
     image: postgres
