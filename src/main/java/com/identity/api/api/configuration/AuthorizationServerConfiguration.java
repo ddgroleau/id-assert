@@ -21,7 +21,6 @@ import org.springframework.security.oauth2.server.authorization.config.ClientSet
 import org.springframework.security.oauth2.server.authorization.config.ProviderSettings;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
-
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
@@ -30,7 +29,6 @@ import java.util.UUID;
 
 @Configuration
 public class AuthorizationServerConfiguration {
-
     @Value("${auth.server.clientId}")
     private String clientId;
 
