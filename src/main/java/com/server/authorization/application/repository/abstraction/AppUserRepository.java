@@ -1,6 +1,6 @@
-package com.identity.api.application.repository.abstraction;
+package com.server.authorization.application.repository.abstraction;
 
-import com.identity.api.application.domain.model.AppUser;
+import com.server.authorization.application.domain.model.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;

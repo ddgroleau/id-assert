@@ -1,4 +1,4 @@
-package com.identity.api.application.domain.model;
+package com.server.authorization.application.domain.model;
 
 import com.sun.istack.NotNull;
 

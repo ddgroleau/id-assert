@@ -3,12 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Users</title>
+    <title>Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/css/app.css}" type="text/css" />
 </head>
 <body>
-    <h1>Please Log In</h1>
+    <div th:replace="fragments :: 'header'"></div>
+    <h1>Log In</h1>
     <div th:if="${param.error}">
         Invalid username and password.</div>
     <div th:if="${param.logout}">
@@ -21,6 +22,9 @@
             <input type="password" name="password" placeholder="Password"/>
         </div>
         <input type="submit" value="Log in" />
+        <br/>
+        <a th:href="@{/user/sign-up}">Sign Up</a>
     </form>
+    <div th:replace="fragments :: 'footer'"></div>
 </body>
 </html>

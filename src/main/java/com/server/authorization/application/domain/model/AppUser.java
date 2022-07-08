@@ -1,18 +1,24 @@
-package com.identity.api.application.domain.model;
+package com.server.authorization.application.domain.model;
 
+import com.server.authorization.web.viewmodel.CreateUserViewModel;
 import com.sun.istack.NotNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
+import static com.server.authorization.web.configuration.AuthorizationServerConfiguration.passwordEncoder;
 import static java.util.UUID.randomUUID;
 
 @Entity
 @Table(name="users")
-public class AppUser implements OAuth2User, UserDetails {
+public class AppUser implements UserDetails {
     @Id
     @Column(name="user_id")
     private UUID userId;
@@ -84,6 +90,37 @@ public class AppUser implements OAuth2User, UserDetails {
 
     public AppUser() {
         setUserId(randomUUID());
+        setActive(true);
+        setEmailConfirmed(false);
+        setPhoneConfirmed(false);
+        setSubscriber(true);
+        setMultiFactorEnabled(false);
+        setLastLogin(LocalDateTime.now());
+        setCreatedOn(LocalDateTime.now());
+        setUpdatedOn(LocalDateTime.now());
+    }
+
+    private AppUser(CreateUserViewModel createUserViewModel) {
+        setUserId(randomUUID());
+        setEmail(createUserViewModel.getEmail());
+        setUsername(createUserViewModel.getEmail());
+        setFirstName(createUserViewModel.getFirstName());
+        setLastName(createUserViewModel.getLastName());
+        setPassword(createUserViewModel.getPassword());
+        setActive(true);
+        setEmailConfirmed(false);
+        setPhoneConfirmed(false);
+        setSubscriber(true);
+        setMultiFactorEnabled(false);
+        setLastLogin(LocalDateTime.now());
+        setCreatedBy("sign-up");
+        setCreatedOn(LocalDateTime.now());
+        setUpdatedBy("sign-up");
+        setUpdatedOn(LocalDateTime.now());
+    }
+
+    public static AppUser createNewUser(CreateUserViewModel createUserViewModel) {
+        return new AppUser(createUserViewModel);
     }
 
     public UUID getUserId() {
@@ -125,13 +162,21 @@ public class AppUser implements OAuth2User, UserDetails {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
-    public String getPasswordHash() {
-        return passwordHash;
+    @Override
+    public String getUsername() {
+        return username;
+    }
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    @Override
+    public String getPassword() {
+        System.out.println(this.passwordHash);
+        return  this.passwordHash;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setPassword(String plainTextPassword) {
+        this.passwordHash = passwordEncoder().encode(plainTextPassword);
     }
 
     public LocalDateTime getDateOfBirth() {
@@ -230,14 +275,12 @@ public class AppUser implements OAuth2User, UserDetails {
         this.updatedBy = updatedBy;
     }
 
-    @Override
-    public <A> A getAttribute(String name) {
-        return OAuth2User.super.getAttribute(name);
+    public Set<Role> getRoles() {
+        return this.roles;
     }
 
-    @Override
-    public Map<String, Object> getAttributes() {
-        return null;
+    public void setRoles(Set<String> roles) {
+        this.roles = new HashSet<>();
     }
 
     @Override
@@ -246,19 +289,6 @@ public class AppUser implements OAuth2User, UserDetails {
                 .stream()
                 .map(role->new SimpleGrantedAuthority(role.getName()))
                 .toList();
-    }
-
-    @Override
-    public String getPassword() {
-        return null;
-    }
-
-    public Set<Role> getRoles() {
-        return this.roles;
-    }
-
-    public String getUsername() {
-        return username;
     }
 
     @Override
@@ -281,12 +311,5 @@ public class AppUser implements OAuth2User, UserDetails {
         return this.isActive;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
-    @Override
-    public String getName() {
-        return this.username;
-    }
 }
