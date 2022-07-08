@@ -13,6 +13,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
+import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OidcConfigurer;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
@@ -78,15 +79,18 @@ public class AuthorizationServerConfiguration {
                                 new LoginUrlAuthenticationEntryPoint("/login"))
                 );
 
-        return http.build();
+        return  http.build();
     }
 
     @Bean
     @Order(2)
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
-        	.formLogin(Customizer.withDefaults());
-
+        http.authorizeHttpRequests(authorize -> authorize
+                        .antMatchers("/sign-up", "/**/*.css", "/**/*.js").permitAll()
+                        .anyRequest().authenticated())
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .permitAll());
         return http.build();
     }
 
@@ -110,8 +114,8 @@ public class AuthorizationServerConfiguration {
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .redirectUri("http://127.0.0.1/login/oauth2/code/idAssert-client-oidc")
-                .redirectUri("http://127.0.0.1:8080/redirect/")
+                .redirectUri("http://127.0.0.1/login/oauth2/code/id-assert-client-oidc")
+                .redirectUri("http://127.0.0.1:8080/authorized")
                 .scope(OidcScopes.OPENID)
                 .scope("write")
                 .scope("read")
