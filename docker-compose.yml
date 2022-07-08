@@ -14,8 +14,8 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/id_assert
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
-      - CLIENT_ID=id-assert
-      - CLIENT_SECRET=secret
+      - CLIENT_ID=clientId
+      - CLIENT_SECRET=clientSecret
       - REDIRECT_URI=http://127.0.0.1:8080
       - ISSUER_URI=http://127.0.0.1:8080
   postgresql:
