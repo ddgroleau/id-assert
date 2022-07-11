@@ -17,8 +17,6 @@ public class CreateUserViewModel {
     @NotEmpty(message = "Confirm Password is required.")
     private String confirmPassword;
 
-    private String signUpErrors;
-
     public String getEmail() {
         return email;
     }
@@ -63,11 +61,4 @@ public class CreateUserViewModel {
         return confirmPassword.equals(password);
     }
 
-    public String getSignUpErrors() {
-        return signUpErrors;
-    }
-
-    public void setSignUpErrors(String signUpErrors) {
-        this.signUpErrors = signUpErrors;
-    }
 }

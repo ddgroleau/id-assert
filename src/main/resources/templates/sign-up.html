@@ -32,7 +32,6 @@
         <input type="password" th:field="*{confirmPassword}" id="confirmPassword" placeholder="Confirm Password">
         <span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
 
-        <span th:if="${#fields.hasErrors('signUpErrors')}" th:errors="*{signUpErrors}"></span>
         <input type="submit" value="Sign Up">
 
     </form>

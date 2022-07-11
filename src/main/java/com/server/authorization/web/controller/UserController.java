@@ -38,7 +38,6 @@ public class UserController {
             }
             catch (Exception e) {
                 System.out.println(e.getMessage());
-                createUserViewModel.setSignUpErrors(e.getMessage());
                 return "sign-up";
             }
         }

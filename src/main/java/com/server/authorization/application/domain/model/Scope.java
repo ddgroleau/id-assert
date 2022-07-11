@@ -1,22 +1,23 @@
 package com.server.authorization.application.domain.model;
 
 import com.sun.istack.NotNull;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name="roles")
-public class Role {
+@Table(name="scopes")
+public class Scope {
 
     //region Properties
     @Id
-    @Column(name="role_id")
-    private UUID roleId;
+    @Column(name="scope_id")
+    private UUID scopeId;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="user_id", nullable=false)
-    private AppUser appUser;
+    @JoinColumn(name="identity_client_id", nullable=false)
+    private IdentityClient identityClient;
 
     @NotNull
     @Column(name="name",unique = true)
@@ -35,40 +36,41 @@ public class Role {
 
     @Column(name="updated_by")
     private String updatedBy;
-
     //endregion
 
-    public Role(){}
+    public Scope() {
 
-    private Role(String name, AppUser appUser) {
+    }
+
+    private Scope(String name, IdentityClient identityClient) {
         setName(name);
-        setRoleId(UUID.randomUUID());
+        setScopeId(UUID.randomUUID());
         setCreatedBy("root");
         setCreatedOn(LocalDateTime.now());
         setUpdatedBy("root");
         setUpdatedOn(LocalDateTime.now());
-        setAppUser(appUser);
+        setIdentityClient(identityClient);
     }
 
-    public static Role createRole(String name, AppUser appUser) {
-        return new Role(name, appUser);
+    public static Scope createScope(String name, IdentityClient identityClient) {
+        return new Scope(name, identityClient);
     }
 
     //region Getters/Setters
+    public UUID getScopeId() {
+        return scopeId;
+    }
+
+    private void setScopeId(UUID scopeId) {
+        this.scopeId = scopeId;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public UUID getRoleId() {
-        return roleId;
-    }
-
-    private void setRoleId(UUID roleId) {
-        this.roleId = roleId;
     }
 
     public LocalDateTime getCreatedOn() {
@@ -103,12 +105,12 @@ public class Role {
         this.updatedBy = updatedBy;
     }
 
-    public AppUser getAppUser() {
-        return appUser;
+    public IdentityClient getIdentityClient() {
+        return identityClient;
     }
 
-    public void setAppUser(AppUser appUser) {
-        this.appUser = appUser;
+    public void setIdentityClient(IdentityClient identityClient) {
+        this.identityClient = identityClient;
     }
     //endregion
 }

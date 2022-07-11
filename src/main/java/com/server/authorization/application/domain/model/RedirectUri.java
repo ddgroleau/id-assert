@@ -1,26 +1,29 @@
 package com.server.authorization.application.domain.model;
 
 import com.sun.istack.NotNull;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name="roles")
-public class Role {
+@Table(name="redirect_uris")
+public class RedirectUri {
 
     //region Properties
     @Id
-    @Column(name="role_id")
-    private UUID roleId;
+    @Column(name="redirect_uri_id")
+    private UUID redirectUriId;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="user_id", nullable=false)
-    private AppUser appUser;
+    @JoinColumn(name="identity_client_id", nullable=false)
+    private IdentityClient identityClient;
 
     @NotNull
-    @Column(name="name",unique = true)
-    private String name;
+    @Column(name="uri",unique = true)
+    private String uri;
 
     @NotNull
     @Column(name="created_on")
@@ -35,40 +38,40 @@ public class Role {
 
     @Column(name="updated_by")
     private String updatedBy;
-
     //endregion
 
-    public Role(){}
+    public RedirectUri() {
+    }
 
-    private Role(String name, AppUser appUser) {
-        setName(name);
-        setRoleId(UUID.randomUUID());
+    private RedirectUri(String uri, IdentityClient identityClient) {
+        setUri(uri);
+        setRedirectUriId(UUID.randomUUID());
         setCreatedBy("root");
         setCreatedOn(LocalDateTime.now());
         setUpdatedBy("root");
         setUpdatedOn(LocalDateTime.now());
-        setAppUser(appUser);
+        setIdentityClient(identityClient);
     }
 
-    public static Role createRole(String name, AppUser appUser) {
-        return new Role(name, appUser);
+    public static RedirectUri createRedirectUri(String uri, IdentityClient identityClient) {
+        return new RedirectUri(uri, identityClient);
     }
 
     //region Getters/Setters
-    public String getName() {
-        return name;
+    public String getUri() {
+        return uri;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    private void setUri(String uri) {
+        this.uri = uri;
     }
 
-    public UUID getRoleId() {
-        return roleId;
+    public UUID getRedirectUriId() {
+        return redirectUriId;
     }
 
-    private void setRoleId(UUID roleId) {
-        this.roleId = roleId;
+    public void setRedirectUriId(UUID redirectUriId) {
+        this.redirectUriId = redirectUriId;
     }
 
     public LocalDateTime getCreatedOn() {
@@ -79,11 +82,11 @@ public class Role {
         this.createdOn = createdOn;
     }
 
-    public String getCreatedBy() {
+    private String getCreatedBy() {
         return createdBy;
     }
 
-    private void setCreatedBy(String createdBy) {
+    public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
@@ -103,12 +106,12 @@ public class Role {
         this.updatedBy = updatedBy;
     }
 
-    public AppUser getAppUser() {
-        return appUser;
+    public IdentityClient getIdentityClient() {
+        return identityClient;
     }
 
-    public void setAppUser(AppUser appUser) {
-        this.appUser = appUser;
+    public void setIdentityClient(IdentityClient identityClient) {
+        this.identityClient = identityClient;
     }
     //endregion
 }

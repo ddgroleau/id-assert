@@ -19,6 +19,8 @@ import static java.util.UUID.randomUUID;
 @Entity
 @Table(name="users")
 public class AppUser implements UserDetails {
+
+    //region Properties
     @Id
     @Column(name="user_id")
     private UUID userId;
@@ -49,23 +51,29 @@ public class AppUser implements UserDetails {
     @NotNull
     @Column(name="is_active")
     private boolean isActive;
+
     @NotNull
     @Column(name="email_confirmed")
     private boolean emailConfirmed;
+
     @NotNull
     @Column(name="phone_confirmed")
     private boolean phoneConfirmed;
+
     @NotNull
     @Column(name="multi_factor_enabled")
     private boolean multiFactorEnabled;
+
     @NotNull
     @Column(name="is_subscriber")
     private boolean isSubscriber;
 
     @Column(name="last_login")
     private LocalDateTime lastLogin;
+
     @Column(name="last_login_location")
     private String lastLoginLocation;
+
     @NotNull
     @Column(name="created_on")
     private LocalDateTime createdOn;
@@ -80,33 +88,20 @@ public class AppUser implements UserDetails {
     @Column(name="updated_by")
     private String updatedBy;
 
-    @OneToMany
-    @JoinTable(
-            name="user_roles",
-            joinColumns = @JoinColumn( name="user_id"),
-            inverseJoinColumns = @JoinColumn( name="role_id")
-    )
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Role> roles;
+    //endregion
 
     public AppUser() {
-        setUserId(randomUUID());
-        setActive(true);
-        setEmailConfirmed(false);
-        setPhoneConfirmed(false);
-        setSubscriber(true);
-        setMultiFactorEnabled(false);
-        setLastLogin(LocalDateTime.now());
-        setCreatedOn(LocalDateTime.now());
-        setUpdatedOn(LocalDateTime.now());
     }
 
-    private AppUser(CreateUserViewModel createUserViewModel) {
+    private AppUser(String email, String firstName, String lastName, String password) {
         setUserId(randomUUID());
-        setEmail(createUserViewModel.getEmail());
-        setUsername(createUserViewModel.getEmail());
-        setFirstName(createUserViewModel.getFirstName());
-        setLastName(createUserViewModel.getLastName());
-        setPassword(createUserViewModel.getPassword());
+        setEmail(email);
+        setUsername(email);
+        setFirstName(firstName);
+        setLastName(lastName);
+        setPassword(password);
         setActive(true);
         setEmailConfirmed(false);
         setPhoneConfirmed(false);
@@ -117,17 +112,23 @@ public class AppUser implements UserDetails {
         setCreatedOn(LocalDateTime.now());
         setUpdatedBy("sign-up");
         setUpdatedOn(LocalDateTime.now());
+
+        AppUser user = this;
+        setRoles(new HashSet<>(){{
+            add(Role.createRole(SystemRole.getBaseUser(), user));
+        }});
     }
 
-    public static AppUser createNewUser(CreateUserViewModel createUserViewModel) {
-        return new AppUser(createUserViewModel);
+    public static AppUser createNewUser(String email, String firstName, String lastName, String password) {
+        return new AppUser(email, firstName, lastName, password);
     }
 
+    //region Getters/Setters
     public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(UUID userId) {
+    private void setUserId(UUID userId) {
         this.userId = userId;
     }
 
@@ -171,7 +172,6 @@ public class AppUser implements UserDetails {
     }
     @Override
     public String getPassword() {
-        System.out.println(this.passwordHash);
         return  this.passwordHash;
     }
 
@@ -247,7 +247,7 @@ public class AppUser implements UserDetails {
         return createdOn;
     }
 
-    public void setCreatedOn(LocalDateTime createdOn) {
+    private void setCreatedOn(LocalDateTime createdOn) {
         this.createdOn = createdOn;
     }
 
@@ -255,7 +255,7 @@ public class AppUser implements UserDetails {
         return createdBy;
     }
 
-    public void setCreatedBy(String createdBy) {
+    private void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
@@ -279,10 +279,12 @@ public class AppUser implements UserDetails {
         return this.roles;
     }
 
-    public void setRoles(Set<String> roles) {
-        this.roles = new HashSet<>();
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
+    //endregion
 
+    //region UserDetails @Override Methods
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.getRoles()
@@ -310,6 +312,6 @@ public class AppUser implements UserDetails {
     public boolean isEnabled() {
         return this.isActive;
     }
-
+    //endregion
 
 }
