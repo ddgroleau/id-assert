@@ -1,19 +1,17 @@
 package com.server.authorization.web.controller;
 
 import com.server.authorization.application.service.implementation.AppUserService;
-import com.server.authorization.web.viewmodel.CreateUserViewModel;
+import com.server.authorization.application.viewmodel.CreateUserViewModel;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/user")
@@ -33,6 +31,7 @@ public class UserController {
                 if (result.hasErrors()) {
                     return "sign-up";
                 }
+
                 appUserService.createUser(createUserViewModel);
                 return "redirect:/login";
             }

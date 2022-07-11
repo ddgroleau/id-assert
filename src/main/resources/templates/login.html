@@ -8,23 +8,37 @@
     <link rel="stylesheet" th:href="@{/css/app.css}" type="text/css" />
 </head>
 <body>
-    <div th:replace="fragments :: 'header'"></div>
-    <h1>Log In</h1>
-    <div th:if="${param.error}">
-        Invalid username and password.</div>
-    <div th:if="${param.logout}">
-        You have been logged out.</div>
-    <form th:action="@{/login}" method="post">
-        <div>
-            <input type="text" name="username" placeholder="Username"/>
-        </div>
-        <div>
-            <input type="password" name="password" placeholder="Password"/>
-        </div>
-        <input type="submit" value="Log in" />
-        <br/>
-        <a th:href="@{/user/sign-up}">Sign Up</a>
-    </form>
-    <div th:replace="fragments :: 'footer'"></div>
+    <main>
+
+        <div th:replace="fragment/layout :: 'header'"></div>
+        <section class="login__form">
+            <h1 class="dark-green">Log In</h1>
+            <div th:if="${param.error}">
+                Invalid username and password.</div>
+            <div th:if="${param.logout}">
+                You have been logged out.</div>
+            <form action="#" th:action="@{/login}" th:object="${loginViewModel}" method="post">
+                <div class="form__field">
+                    <label class="form__label" for="username">Username</label>
+                    <input class="form__input" id="username" type="text" name="username" th:field="*{username}" placeholder="Username or Email"/>
+                    <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+                </div>
+                <div class="form__field">
+                    <label class="form__label" for="password">Password</label>
+                    <input class="form__input" id="password" type="password" name="password" th:field="*{password}" placeholder="Password"/>
+                    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                </div>
+                <div class="login__actions">
+                    <button class="btn dark-green" type="submit">Log In</button>
+                    <a th:href="@{/user/sign-up}" class="link dark-green">Sign Up</a>
+                </div>
+            </form>
+            <h2 class="login__alt">Or log in with:</h2>
+            <button type="button">
+                <image th:src="@{/media/google-logo.jpg}" alt="Google Logo" />
+            </button>
+        </section>
+        <div th:replace="fragment/layout :: 'footer'"></div>
+    </main>
 </body>
 </html>

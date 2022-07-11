@@ -1,11 +1,184 @@
+
 @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap");
 
+@font-face {
+  font-family: "Seasons";
+  src: url("./fonts/Fontspring-DEMO-theseasons-reg.otf");
+}
+
+:root {
+    --rtr-military-green: #7E7F1E;
+    --rtr-green-dark: #073221;
+    --rtr-tan: #E0DDD7;
+    --rtr-eggshell: #F1F1F1;
+    --rtr-seagreen: #405E5C;
+    --rtr-olive-drab: #BDB048;
+    --rtr-brown-clay: #99634E;
+    --rtr-green: #063723;
+    --rtr-shadow: rgba(0,0,0,.4);
+    --font: font-family: "Seasons", serif, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
 html,
-body, * {
+body {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  font-family: 'Roboto',-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background-color: #E0DDD7;
+  font-family: var(--font);
+}
+
+* {
   overflow-x: hidden;
 }
+
+
+
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.specialChar {
+  font-family: serif;
+}
+
+footer {
+    padding-left:5%;
+    z-index: 2;
+    position:sticky;
+    bottom: 0;
+    background-color: var(--rtr-green-dark);
+    width:100%;
+}
+
+header {
+  background-color: var(--rtr-green-dark);
+  font-size: xx-large;
+  text-align: center;
+  padding: 1rem;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  color: var(--rtr-military-green);
+}
+
+h1 {
+    font-weight: 400;
+    font-size: xx-large;
+    margin: 0;
+    margin-block: 1rem;
+}
+
+footer {
+    background-color: var(--rtr-green-dark);
+    font-size: small;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    color: var(--rtr-military-green);
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 0.5rem max(3rem, 10%);
+    gap: 0.25rem;
+}
+
+footer span {
+    white-space: nowrap;
+    margin-right: 1.5rem;
+}
+
+.dark-green {
+    color: var(--rtr-green-dark);
+}
+
+.milt-green {
+    color: var(--rtr-military-green);
+}
+
+.link:visited {
+    color: var(--rtr-military-green);
+}
+
+
+
+.form__field {
+    display: flex;
+    flex-direction: column;
+    margin-block: 1rem;
+}
+
+.form__label {
+    color: var(--rtr-green-dark);
+    font-size: large;
+    margin-bottom: 1rem;
+}
+
+.form__input {
+    border-radius: 5px;
+    border: solid var(--rtr-green-dark) 1px;
+    background: none;
+    text-indent: 1rem;
+    padding: 0.5rem;
+    font-family: var(--font);
+}
+
+
+.btn {
+     border-radius: 12px;
+     border: solid var(--rtr-green-dark) 1px;
+     padding: 0.25rem 1rem;
+     font-size: large;
+     background: none;
+     font-family: var(--font);
+     cursor:pointer;
+}
+
+
+.login__form {
+    display: flex;
+    flex-direction: column;
+    width: 18rem;
+    padding-block: 1rem;
+}
+
+.login__actions {
+    margin-block: 3rem;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: large;
+}
+
+.login__alt {
+    overflow: hidden;
+    text-align: center;
+    white-space: nowrap;
+    font-weight: 400;
+    color: var(--rtr-green-dark);
+    font-size: large;
+    margin: 0;
+}
+
+.login__alt:before, .login__alt:after {
+      background-color: var(--rtr-green-dark);
+      content: "";
+      display: inline-block;
+      height: 1px;
+      position: relative;
+      vertical-align: middle;
+      min-width: 3.5rem;
+}
+
+.login__alt:before {
+    margin-right: 1rem;
+}
+
+.login__alt:after {
+    margin-left: 1rem;
+}
+

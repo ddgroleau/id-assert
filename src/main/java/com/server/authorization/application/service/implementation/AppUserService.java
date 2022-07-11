@@ -2,7 +2,7 @@ package com.server.authorization.application.service.implementation;
 
 import com.server.authorization.application.domain.model.AppUser;
 import com.server.authorization.application.repository.abstraction.AppUserRepository;
-import com.server.authorization.web.viewmodel.CreateUserViewModel;
+import com.server.authorization.application.viewmodel.CreateUserViewModel;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,15 +22,17 @@ public class AppUserService implements UserDetailsService {
     @Transactional(readOnly=true)
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-        System.out.println(username);
         AppUser user = appUserRepository.findByUsername(username);
         if (user == null) throw new UsernameNotFoundException(username);
         return user;
     }
 
     public void createUser(CreateUserViewModel createUserViewModel) {
+        if(createUserViewModel == null) throw new InvalidParameterException("New user is required.");
+
         AppUser appUser = appUserRepository.findByUsername(createUserViewModel.getEmail());
         if(appUser != null) throw new InvalidParameterException("Username not available.");
+
         this.appUserRepository.saveAndFlush(AppUser.createNewUser(
                 createUserViewModel.getEmail(),
                 createUserViewModel.getFirstName(),

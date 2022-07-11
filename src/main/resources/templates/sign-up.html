@@ -8,33 +8,35 @@
     <link rel="stylesheet" th:href="@{/css/app.css}" type="text/css" />
 </head>
 <body>
-    <div th:replace="fragments :: 'header'"></div>
-    <h1>Sign Up</h1>
-    <form action="#" th:action="@{/user/create}" th:object="${createUserViewModel}" method="post">
+    <main>
+        <div th:replace="fragment/layout :: 'header'"></div>
+        <h1>Sign Up</h1>
+        <form action="#" th:action="@{/user/create}" th:object="${createUserViewModel}" method="post">
 
-        <label for="firstName">First Name</label>
-        <input type="text" th:field="*{firstName}" id="firstName" placeholder="First Name">
-        <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
+            <label for="firstName">First Name</label>
+            <input type="text" th:field="*{firstName}" id="firstName" placeholder="First Name">
+            <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
 
-        <label for="lastName">Last Name</label>
-        <input type="text" th:field="*{lastName}" id="lastName" placeholder="Last Name">
-        <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
+            <label for="lastName">Last Name</label>
+            <input type="text" th:field="*{lastName}" id="lastName" placeholder="Last Name">
+            <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
 
-        <label for="email">Email</label>
-        <input type="text" th:field="*{email}" id="email" placeholder="Email">
-        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+            <label for="email">Email</label>
+            <input type="text" th:field="*{email}" id="email" placeholder="Email">
+            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
 
-        <label for="password">Password</label>
-        <input type="password" th:field="*{password}" id="password" placeholder="Password">
-        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+            <label for="password">Password</label>
+            <input type="password" th:field="*{password}" id="password" placeholder="Password">
+            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
 
-        <label for="confirmPassword">Confirm Password</label>
-        <input type="password" th:field="*{confirmPassword}" id="confirmPassword" placeholder="Confirm Password">
-        <span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" th:field="*{confirmPassword}" id="confirmPassword" placeholder="Confirm Password">
+            <span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
 
-        <input type="submit" value="Sign Up">
+            <input type="submit" value="Sign Up">
 
-    </form>
-    <div th:replace="fragments :: 'footer'"></div>
+        </form>
+        <div th:replace="fragment/layout :: 'footer'"></div>
+    </main>
 </body>
 </html>

@@ -20,30 +20,42 @@ public class IdentityClientService implements RegisteredClientRepository {
 
     @Override
     public void save(RegisteredClient registeredClient) {
+        if(registeredClient == null) throw new InvalidParameterException("Client is required.");
+
         Optional<IdentityClient> client = identityClientRepository.findById(registeredClient.getId());
         if(client.isPresent()) throw new InvalidParameterException("Client already exists");
+
         identityClientRepository.saveAndFlush((IdentityClient) registeredClient);
         return;
     }
 
     public void createIfNotExists(IdentityClient identityClient) {
+        if(identityClient == null) throw new InvalidParameterException("Client is required.");
+
         Optional<IdentityClient> client = identityClientRepository.findById(identityClient.getId());
         if(client.isPresent()) return;
+
         identityClientRepository.saveAndFlush(identityClient);
         return;
     }
 
     @Override
     public RegisteredClient findById(String id) {
+        if(id == null || id.isEmpty()) throw new InvalidParameterException("Id is required.");
+
         Optional<IdentityClient> client = identityClientRepository.findById(id);
         if(client.isEmpty()) return null;
+
         return client.get();
     }
 
     @Override
     public RegisteredClient findByClientId(String clientId) {
+        if(clientId == null || clientId.isEmpty()) throw new InvalidParameterException("ClientId is required.");
+
         Optional<IdentityClient> client = identityClientRepository.findByClientId(clientId);
         if(client.isEmpty()) return null;
+
         return client.get();
     }
 }

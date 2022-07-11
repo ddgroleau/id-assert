@@ -1,6 +1,5 @@
 package com.server.authorization.application.domain.model;
 
-import com.server.authorization.web.viewmodel.CreateUserViewModel;
 import com.sun.istack.NotNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

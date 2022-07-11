@@ -1,8 +1,6 @@
 package com.server.authorization.application.domain.model;
 
 import com.sun.istack.NotNull;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

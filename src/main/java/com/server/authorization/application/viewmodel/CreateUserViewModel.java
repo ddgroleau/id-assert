@@ -1,4 +1,4 @@
-package com.server.authorization.web.viewmodel;
+package com.server.authorization.application.viewmodel;
 
 import javax.validation.constraints.NotEmpty;
 
