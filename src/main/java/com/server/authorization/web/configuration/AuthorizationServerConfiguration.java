@@ -5,15 +5,13 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import com.server.authorization.application.domain.model.IdentityClient;
-import com.server.authorization.application.service.implementation.IdentityClientService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.authorization.config.ProviderSettings;
 import org.springframework.security.web.SecurityFilterChain;
@@ -46,11 +44,17 @@ public class AuthorizationServerConfiguration {
     @Order(2)
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
-                        .antMatchers("/**/sign-up","/**/create", "/**/*.css", "/**/*.js").permitAll()
+                        .antMatchers(
+                                "/**/sign-up",
+                                "/**/create",
+                                "/**/forgot-password",
+                                "/**/send-reset-password-link",
+                                "/**/*.css",
+                                "/media/*",
+                                "/**/*.js"
+                        ).permitAll()
                         .anyRequest().authenticated())
-                        .formLogin(form -> form
-                        .loginPage("/login")
-                        .permitAll());
+                        .formLogin(form -> form.loginPage("/login").permitAll());
         return http.build();
     }
 
@@ -86,7 +90,7 @@ public class AuthorizationServerConfiguration {
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
 }

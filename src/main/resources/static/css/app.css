@@ -1,6 +1,4 @@
-
-@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap");
-
+/*Globals*/
 @font-face {
   font-family: "Seasons";
   src: url("./fonts/Fontspring-DEMO-theseasons-reg.otf");
@@ -16,6 +14,7 @@
     --rtr-brown-clay: #99634E;
     --rtr-green: #063723;
     --rtr-shadow: rgba(0,0,0,.4);
+    --rtr-red: #D62839;
     --font: font-family: "Seasons", serif, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
@@ -30,11 +29,12 @@ body {
 
 * {
   overflow-x: hidden;
+    padding: 0;
+    margin: 0;
 }
 
 
-
-
+/*General*/
 main {
   display: flex;
   flex-direction: column;
@@ -48,8 +48,8 @@ main {
 
 footer {
     padding-left:5%;
-    z-index: 2;
     position:sticky;
+    position: -webkit-sticky;
     bottom: 0;
     background-color: var(--rtr-green-dark);
     width:100%;
@@ -61,6 +61,7 @@ header {
   text-align: center;
   padding: 1rem;
   position: sticky;
+  position: -webkit-sticky;
   top: 0;
   width: 100%;
   color: var(--rtr-military-green);
@@ -70,7 +71,7 @@ h1 {
     font-weight: 400;
     font-size: xx-large;
     margin: 0;
-    margin-block: 1rem;
+    color: var(--rtr-green-dark);
 }
 
 footer {
@@ -80,19 +81,23 @@ footer {
     flex-flow: row wrap;
     justify-content: space-between;
     color: var(--rtr-military-green);
-    position: absolute;
+    position: sticky;
     bottom: 0;
     width: 100%;
     padding: 0.5rem max(3rem, 10%);
-    gap: 0.25rem;
 }
 
 footer span {
     white-space: nowrap;
-    margin-right: 1.5rem;
+    padding:0rem 1.5rem;
+    line-height: 2rem;
 }
 
 .dark-green {
+    color: var(--rtr-green-dark);
+}
+
+.dark-green:visited {
     color: var(--rtr-green-dark);
 }
 
@@ -100,12 +105,19 @@ footer span {
     color: var(--rtr-military-green);
 }
 
-.link:visited {
+.milt-green:visited {
     color: var(--rtr-military-green);
 }
 
+.error {
+    color: var(--rtr-red);
+}
 
+.message {
+    color: var(--rtr-seagreen);
+}
 
+/*Form*/
 .form__field {
     display: flex;
     flex-direction: column;
@@ -115,7 +127,6 @@ footer span {
 .form__label {
     color: var(--rtr-green-dark);
     font-size: large;
-    margin-bottom: 1rem;
 }
 
 .form__input {
@@ -125,29 +136,47 @@ footer span {
     text-indent: 1rem;
     padding: 0.5rem;
     font-family: var(--font);
+    background-color: rgba(0,0,0,.05);
+    margin-top: 0.5rem;
+}
+
+.form__input:focus {
+    outline: none;
+    border: solid var(--rtr-seagreen) 1px;
+    background-color: var(--rtr-tan);
 }
 
 
+/*Button*/
 .btn {
      border-radius: 12px;
      border: solid var(--rtr-green-dark) 1px;
-     padding: 0.25rem 1rem;
+     padding: 0.25rem 2rem;
      font-size: large;
      background: none;
      font-family: var(--font);
      cursor:pointer;
 }
 
+.btn:hover {
+     color: var(--rtr-tan);
+     background-color: var(--rtr-seagreen);
+     border: solid var(--rtr-seagreen) 1px;
+     transition: all 0.2s ease-in-out;
+}
 
+
+/*Login*/
 .login__form {
     display: flex;
     flex-direction: column;
     width: 18rem;
-    padding-block: 1rem;
+    padding-block: 2rem;
+    min-height: 80vh;
 }
 
 .login__actions {
-    margin-block: 3rem;
+    margin-block: 2rem;
     display:flex;
     justify-content: space-between;
     align-items: center;
@@ -155,6 +184,13 @@ footer span {
 }
 
 .login__alt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.login__alt-title {
     overflow: hidden;
     text-align: center;
     white-space: nowrap;
@@ -164,7 +200,7 @@ footer span {
     margin: 0;
 }
 
-.login__alt:before, .login__alt:after {
+.login__alt-title:before, .login__alt-title:after {
       background-color: var(--rtr-green-dark);
       content: "";
       display: inline-block;
@@ -174,11 +210,103 @@ footer span {
       min-width: 3.5rem;
 }
 
-.login__alt:before {
+.login__alt-title:before {
     margin-right: 1rem;
 }
 
-.login__alt:after {
+.login__alt-title:after {
     margin-left: 1rem;
+}
+
+.login__alt-link {
+    width: fit-content;
+    margin-block: 1rem;
+}
+
+.login__signup {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   margin-top: 1rem;
+}
+
+.login__signup-title {
+    overflow:visible;
+    text-align: center;
+    white-space: nowrap;
+    font-weight: 400;
+    color: var(--rtr-green-dark);
+    font-size: large;
+    margin: 0;
+}
+
+.login__signup-button {
+    margin-block: 2rem;
+}
+
+
+/*Sign Up*/
+.signup__form {
+    display: flex;
+    flex-direction: column;
+    width: 18rem;
+    padding-block: 2rem;
+    min-height: 80vh;
+}
+
+.signup__actions {
+    display: inline-block;
+}
+
+.signup__login-title {
+    overflow:visible;
+    text-align: center;
+    white-space: nowrap;
+    font-weight: 400;
+    color: var(--rtr-green-dark);
+    font-size: large;
+    margin: 0;
+}
+
+.signup__button {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    white-space: nowrap;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+
+/*Forgot Password*/
+.forgot-password__form {
+    display: flex;
+    flex-direction: column;
+    width: 18rem;
+    padding-block: 2rem;
+    min-height: 80vh;
+}
+
+.forgot-password__instruction {
+    color: var(--rtr-green-dark);
+    font-size: large;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.forgot-password__actions {
+    display: flex;
+    flex-direction: column;
+    margin-block: 2rem;
+    gap: 1rem;
+}
+
+.forgot-password__link {
+    overflow:visible;
+    white-space: nowrap;
+    font-weight: 400;
+    color: var(--rtr-green-dark);
+    font-size: large;
+    margin: 0;
 }
 

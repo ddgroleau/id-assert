@@ -2,6 +2,7 @@ package com.server.authorization.application.services;
 
 import com.server.authorization.application.domain.model.AppUser;
 import com.server.authorization.application.repository.abstraction.AppUserRepository;
+import com.server.authorization.application.repository.abstraction.PasswordTokenRepository;
 import com.server.authorization.application.service.implementation.AppUserService;
 import com.server.authorization.application.viewmodel.CreateUserViewModel;
 import org.junit.jupiter.api.BeforeAll;
@@ -19,11 +20,12 @@ import static org.mockito.Mockito.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AppUserServiceTests {
     private final AppUserRepository appUserRepository = mock(AppUserRepository.class);
+    private final PasswordTokenRepository passwordTokenRepository = mock(PasswordTokenRepository.class);
     private AppUserService appUserService;
 
     @BeforeAll
     void setup() {
-        appUserService = new AppUserService(appUserRepository);
+        appUserService = new AppUserService(appUserRepository,passwordTokenRepository);
     }
 
     @Test

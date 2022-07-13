@@ -19,7 +19,7 @@ public class Role {
     private AppUser appUser;
 
     @NotNull
-    @Column(name="name",unique = true)
+    @Column(name="name")
     private String name;
 
     @NotNull
