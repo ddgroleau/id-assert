@@ -14,7 +14,7 @@ public class PasswordResetToken {
 
     @NotNull
     @Column(name="token")
-    private UUID token;
+    private String token;
 
     @OneToOne(targetEntity = AppUser.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
@@ -29,7 +29,7 @@ public class PasswordResetToken {
     private PasswordResetToken(String token, AppUser appUser) {
         this.passwordResetTokenId = UUID.randomUUID();
         this.expiryDate = LocalDateTime.now().plusDays(1);
-        this.token = UUID.randomUUID();
+        this.token = token;
         this.appUser = appUser;
     }
 
@@ -37,4 +37,15 @@ public class PasswordResetToken {
         return new PasswordResetToken(token,appUser);
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public UUID getPasswordResetTokenId() {
+        return passwordResetTokenId;
+    }
+
+    public AppUser getAppUser() {
+        return appUser;
+    }
 }

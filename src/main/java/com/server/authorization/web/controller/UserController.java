@@ -1,6 +1,7 @@
 package com.server.authorization.web.controller;
 
 import com.server.authorization.application.domain.model.AppUser;
+import com.server.authorization.application.domain.model.PasswordResetToken;
 import com.server.authorization.application.service.implementation.AppUserService;
 import com.server.authorization.application.viewmodel.CreateUserViewModel;
 import com.server.authorization.application.viewmodel.ForgotPasswordViewModel;
@@ -34,9 +35,8 @@ public class UserController {
         @PostMapping("/create")
         public String createUser(@Valid CreateUserViewModel createUserViewModel, BindingResult result, Model model) {
             try {
-                if (result.hasErrors()) {
-                    return "sign-up";
-                }
+                if (result.hasErrors()) return "sign-up";
+
                 appUserService.createUser(createUserViewModel);
                 return "redirect:/login";
             }
@@ -50,13 +50,12 @@ public class UserController {
         @PostMapping("/send-reset-password-link")
         public String sendResetPasswordLink(@Valid ForgotPasswordViewModel forgotPasswordViewModel, BindingResult result, Model model) {
             try {
-                if (result.hasErrors()) {
-                    return "forgot-password";
-                }
+                if (result.hasErrors()) return "forgot-password";
+
                 AppUser user = appUserService.findUserByEmail(forgotPasswordViewModel.getEmail());
 
-                String token = UUID.randomUUID().toString();
-                appUserService.createPasswordResetTokenForUser(user, token);
+                PasswordResetToken resetToken = appUserService.createPasswordResetTokenForUser(user, UUID.randomUUID().toString());
+                appUserService.sendPasswordResetEmail(user, resetToken);
 
                 return "redirect:/forgot-password?success";
             } catch (Exception e) {

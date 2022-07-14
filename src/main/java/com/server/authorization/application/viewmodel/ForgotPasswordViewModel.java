@@ -3,9 +3,9 @@ package com.server.authorization.application.viewmodel;
 import javax.validation.constraints.NotEmpty;
 
 public class ForgotPasswordViewModel {
+    @NotEmpty(message = "Email is required.")
     private String email;
 
-    @NotEmpty(message = "Email is required.")
     public String getEmail() {
         return email;
     }

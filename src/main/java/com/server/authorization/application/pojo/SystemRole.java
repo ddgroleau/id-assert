@@ -1,4 +1,4 @@
-package com.server.authorization.application.domain.model;
+package com.server.authorization.application.pojo;
 
 public final class SystemRole {
 

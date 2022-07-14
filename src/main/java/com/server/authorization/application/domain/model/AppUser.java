@@ -1,5 +1,6 @@
 package com.server.authorization.application.domain.model;
 
+import com.server.authorization.application.pojo.SystemRole;
 import com.sun.istack.NotNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
