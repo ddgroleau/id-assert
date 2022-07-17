@@ -36,7 +36,6 @@ public class AuthorizationServerConfiguration {
                         .authenticationEntryPoint(
                                 new LoginUrlAuthenticationEntryPoint("/login"))
                 );
-
         return  http.build();
     }
 
@@ -46,15 +45,19 @@ public class AuthorizationServerConfiguration {
         http.authorizeHttpRequests(authorize -> authorize
                         .antMatchers(
                                 "/**/sign-up",
+                                "/login",
                                 "/**/create",
                                 "/**/forgot-password",
                                 "/**/send-reset-password-link",
+                                "/**/reset-password/**",
+                                "/**/change-password",
                                 "/**/*.css",
                                 "/media/*",
                                 "/**/*.js"
                         ).permitAll()
                         .anyRequest().authenticated())
-                        .formLogin(form -> form.loginPage("/login").permitAll());
+                        .formLogin(form -> form.loginPage("/login").permitAll())
+                        .logout();
         return http.build();
     }
 

@@ -40,6 +40,7 @@ main {
   flex-direction: column;
   align-items: center;
   width: 100%;
+  height: 100vh;
 }
 
 .specialChar {
@@ -81,7 +82,7 @@ footer {
     flex-flow: row wrap;
     justify-content: space-between;
     color: var(--rtr-military-green);
-    position: sticky;
+    position: absolute;
     bottom: 0;
     width: 100%;
     padding: 0.5rem max(3rem, 10%);
@@ -113,9 +114,14 @@ footer span {
     color: var(--rtr-red);
 }
 
+.success {
+    color: var(--rtr-seagreen);
+}
+
 .message {
     color: var(--rtr-seagreen);
 }
+
 
 /*Form*/
 .form__field {
@@ -288,8 +294,7 @@ footer span {
 }
 
 .forgot-password__instruction {
-    color: var(--rtr-green-dark);
-    font-size: large;
+    color: var(--rtr-seagreen);
     margin-top: 1rem;
     margin-bottom: 0.5rem;
 }
@@ -310,3 +315,96 @@ footer span {
     margin: 0;
 }
 
+
+/*Reset Password*/
+.reset-password__form {
+    display: flex;
+    flex-direction: column;
+    width: 18rem;
+    padding-block: 2rem;
+    min-height: 80vh;
+}
+
+.reset-password__form p {
+    margin-top: 1rem;
+}
+
+.reset-password__actions {
+    margin-top: 1rem;
+}
+
+.reset-password__link {
+    overflow:visible;
+    white-space: nowrap;
+    font-weight: 400;
+    color: var(--rtr-green-dark);
+    font-size: large;
+    margin: 0.5rem 0;
+}
+
+.reset-password__button {
+    margin-top: 1.5rem;
+}
+
+/*Reset Password*/
+.home {
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    width: 18rem;
+    padding-bottom: 2rem;
+
+}
+
+.home__actions {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 2rem;
+    align-items: center;
+}
+
+.home__actions h1 {
+    font-size: xxx-large;
+    font-style: italic;
+    margin-bottom: 1rem;
+}
+
+.home__actions-link {
+    min-width: 70%;
+    text-decoration: none;
+    font-size: x-large;
+    text-align: center
+}
+
+.home__actions-logout {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.home__actions button {
+    min-width: 92%;
+    font-size: x-large;
+    text-align: center
+}
+
+.home__user {
+    width: 90%;
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: flex-end;
+    color: var(--rtr-green-dark);
+}
+
+.home__user-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    gap: 0.5rem;
+}
+
+.home__user-info em{
+    font-weight: 500;
+}

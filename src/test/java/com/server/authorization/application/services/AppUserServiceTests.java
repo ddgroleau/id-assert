@@ -2,6 +2,7 @@ package com.server.authorization.application.services;
 
 import com.server.authorization.application.domain.model.AppUser;
 import com.server.authorization.application.domain.model.PasswordResetToken;
+import com.server.authorization.application.dto.EventResponseDto;
 import com.server.authorization.application.dto.MessageDto;
 import com.server.authorization.application.pojo.MessageMediaTypes;
 import com.server.authorization.application.repository.abstraction.AppUserRepository;
@@ -19,6 +20,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,7 +37,7 @@ public class AppUserServiceTests {
 
     @BeforeAll
     void setup() {
-        appUserService = new AppUserService(appUserRepository,passwordTokenRepository,emailClient);
+        appUserService = new AppUserService(appUserRepository,passwordTokenRepository,emailClient,"http://localhost:8080");
     }
 
     @Test
@@ -49,7 +52,7 @@ public class AppUserServiceTests {
 
         AppUser actualUser = (AppUser)appUserService.loadUserByUsername(expectedUser.getUsername());
 
-        assertTrue(expectedUser.equals(actualUser));
+        assertEquals(expectedUser, actualUser);
     }
 
     @Test
@@ -93,6 +96,13 @@ public class AppUserServiceTests {
             setPassword("testPass");
             setConfirmPassword("testPass");
         }};
+
+        when(appUserRepository.findByUsername(createUserViewModel.getEmail())).thenReturn(AppUser.createNewUser(
+                createUserViewModel.getEmail(),
+                createUserViewModel.getFirstName(),
+                createUserViewModel.getLastName(),
+                createUserViewModel.getPassword()
+        ));
 
         InvalidParameterException exception =
                 assertThrows(InvalidParameterException.class,()-> appUserService.createUser(createUserViewModel));
@@ -179,6 +189,104 @@ public class AppUserServiceTests {
                         appUserService.sendPasswordResetEmail(user,null));
 
         assertEquals("User and token are required.", exception.getMessage());
+    }
+
+    @Test
+    void validatePasswordResetToken_withExistingUserAndToken_returnsSuccessEventResponseDto() {
+        AppUser user = AppUser.createNewUser("testEmail","testFirst","testLast","testPass");
+        PasswordResetToken passwordResetToken = PasswordResetToken.generateToken(UUID.randomUUID().toString(),user);
+        when(passwordTokenRepository.findByToken(any(String.class))).thenReturn(passwordResetToken);
+        doNothing().when(passwordTokenRepository).delete(any(PasswordResetToken.class));
+        EventResponseDto expectedResponse = EventResponseDto.createResponse(true,"Please reset your password below.");
+
+        EventResponseDto actualResponse = appUserService.validatePasswordResetToken(user.getUserId(),passwordResetToken.getToken());
+
+        assertEquals(expectedResponse.isSuccess(),actualResponse.isSuccess());
+        assertEquals(expectedResponse.getMessage(),actualResponse.getMessage());
+        verify(passwordTokenRepository,times(1)).findByToken(passwordResetToken.getToken());
+        verify(passwordTokenRepository,times(1)).delete(any(PasswordResetToken.class));
+    }
+
+    @Test
+    void validatePasswordResetToken_withNullUserAndToken_throwsException() {
+        InvalidParameterException exception =
+                assertThrows(InvalidParameterException.class,()->
+                        appUserService.validatePasswordResetToken(null,null));
+
+        assertEquals("UserId and Token are required.", exception.getMessage());
+    }
+
+    @Test
+    void validatePasswordResetToken_withEmptyUserAndValidToken_throwsException() {
+        InvalidParameterException exception =
+                assertThrows(InvalidParameterException.class,()->
+                        appUserService.validatePasswordResetToken("",UUID.randomUUID().toString()));
+
+        assertEquals("UserId and Token are required.", exception.getMessage());
+    }
+
+    @Test
+    void validatePasswordResetToken_withValidUserAndEmptyToken_throwsException() {
+        InvalidParameterException exception =
+                assertThrows(InvalidParameterException.class,()->
+                        appUserService.validatePasswordResetToken(UUID.randomUUID().toString(),""));
+
+        assertEquals("UserId and Token are required.", exception.getMessage());
+    }
+
+    @Test
+    void validatePasswordResetToken_withExistingUserAndNonExistentToken_returnsFailureEventResponseDto() {
+        AppUser user = AppUser.createNewUser("testEmail","testFirst","testLast","testPass");
+        PasswordResetToken passwordResetToken = PasswordResetToken.generateToken(UUID.randomUUID().toString(),user);
+        when(passwordTokenRepository.findByToken(any(String.class))).thenReturn(null);
+        EventResponseDto expectedResponse = EventResponseDto.createResponse(false,"Invalid password reset token.");
+
+        EventResponseDto actualResponse = appUserService.validatePasswordResetToken(user.getUserId(),passwordResetToken.getToken());
+
+        assertEquals(expectedResponse.isSuccess(),actualResponse.isSuccess());
+        assertEquals(expectedResponse.getMessage(),actualResponse.getMessage());
+        verify(passwordTokenRepository,times(1)).findByToken(passwordResetToken.getToken());
+    }
+
+    @Test
+    void validatePasswordResetToken_withNonMatchingUserAndValidToken_returnsFailureEventResponseDto() {
+        AppUser user = AppUser.createNewUser("testEmail","testFirst","testLast","testPass");
+        PasswordResetToken passwordResetToken = PasswordResetToken.generateToken(UUID.randomUUID().toString(),user);
+        when(passwordTokenRepository.findByToken(any(String.class))).thenReturn(passwordResetToken);
+        EventResponseDto expectedResponse = EventResponseDto.createResponse(false,"Invalid password reset token.");
+
+        EventResponseDto actualResponse = appUserService.validatePasswordResetToken(UUID.randomUUID().toString(),passwordResetToken.getToken());
+
+        assertEquals(expectedResponse.isSuccess(),actualResponse.isSuccess());
+        assertEquals(expectedResponse.getMessage(),actualResponse.getMessage());
+        verify(passwordTokenRepository,times(1)).findByToken(passwordResetToken.getToken());
+    }
+
+    @Test
+    void validatePasswordResetToken_withValidUserAndExpiredToken_returnsFailureEventResponseDto() {
+        AppUser user = AppUser.createNewUser("testEmail","testFirst","testLast","testPass");
+        PasswordResetToken passwordResetToken = PasswordResetToken.generateToken(UUID.randomUUID().toString(),user);
+        passwordResetToken.setExpiryDate(LocalDateTime.now().minusDays(2));
+        when(passwordTokenRepository.findByToken(any(String.class))).thenReturn(passwordResetToken);
+        EventResponseDto expectedResponse = EventResponseDto.createResponse(false,"Your password reset token has expired.");
+
+        EventResponseDto actualResponse = appUserService.validatePasswordResetToken(user.getUserId(),passwordResetToken.getToken());
+
+        assertEquals(expectedResponse.isSuccess(),actualResponse.isSuccess());
+        assertEquals(expectedResponse.getMessage(),actualResponse.getMessage());
+        verify(passwordTokenRepository,times(1)).findByToken(passwordResetToken.getToken());
+    }
+
+    @Test
+    void changeUserPassword_withValidUserIdAndNewPassword_changesPassword() {
+        String newPassword = "changePassNew";
+        AppUser user = AppUser.createNewUser("changeEmail","changeFirst","changeLast","changePass");
+        when(appUserRepository.findById(user.getUserId())).thenReturn(Optional.of(user));
+        when(appUserRepository.save(any(AppUser.class))).thenReturn(user);
+
+        appUserService.changeUserPassword(user.getUserId(),newPassword);
+
+        verify(appUserRepository, times(1)).save(any(AppUser.class));
     }
 
 }

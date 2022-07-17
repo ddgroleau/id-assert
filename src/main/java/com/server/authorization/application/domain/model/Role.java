@@ -12,7 +12,7 @@ public class Role {
     //region Properties
     @Id
     @Column(name="role_id")
-    private UUID roleId;
+    private String roleId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="user_id", nullable=false)
@@ -42,7 +42,7 @@ public class Role {
 
     private Role(String name, AppUser appUser) {
         setName(name);
-        setRoleId(UUID.randomUUID());
+        setRoleId(UUID.randomUUID().toString());
         setCreatedBy("root");
         setCreatedOn(LocalDateTime.now());
         setUpdatedBy("root");
@@ -63,11 +63,11 @@ public class Role {
         this.name = name;
     }
 
-    public UUID getRoleId() {
+    public String getRoleId() {
         return roleId;
     }
 
-    private void setRoleId(UUID roleId) {
+    private void setRoleId(String roleId) {
         this.roleId = roleId;
     }
 

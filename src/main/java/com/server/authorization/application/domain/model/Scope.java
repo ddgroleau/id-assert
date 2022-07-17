@@ -13,7 +13,7 @@ public class Scope {
     //region Properties
     @Id
     @Column(name="scope_id")
-    private UUID scopeId;
+    private String scopeId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="identity_client_id", nullable=false)
@@ -44,7 +44,7 @@ public class Scope {
 
     private Scope(String name, IdentityClient identityClient) {
         setName(name);
-        setScopeId(UUID.randomUUID());
+        setScopeId(UUID.randomUUID().toString());
         setCreatedBy("root");
         setCreatedOn(LocalDateTime.now());
         setUpdatedBy("root");
@@ -57,11 +57,11 @@ public class Scope {
     }
 
     //region Getters/Setters
-    public UUID getScopeId() {
+    public String getScopeId() {
         return scopeId;
     }
 
-    private void setScopeId(UUID scopeId) {
+    private void setScopeId(String scopeId) {
         this.scopeId = scopeId;
     }
 

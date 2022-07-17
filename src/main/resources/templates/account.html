@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Account</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/app.css}" type="text/css" />
+</head>
+<body>
+<main>
+    <div th:replace="fragment/layout :: 'header'"></div>
+    <section class="forgot-password__form">
+        <h1 class="dark-green">Account Information</h1>
+        <span class="error" th:if="${#fields.hasErrors('global')}" th:text="${err}" th:each="err : ${#fields.errors('global')}" />
+        <form action="#" th:action="@{/user/update-account}" th:object="${accountViewModel}" method="post">
+            <div class="form__field">
+                <label class="form__label" for="firstName">First Name</label>
+                <span class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
+                <input class="form__input" id="firstName" th:value="${#authentication.getPrincipal().getFirstName()}" type="text" name="firstName" placeholder="First Name"/>
+            </div>
+            <div class="form__field">
+                <label class="form__label" for="lastName">Last Name</label>
+                <span class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{email}"></span>
+                <input class="form__input" id="lastName" type="text" th:value="${#authentication.getPrincipal().getLastName()}" name="lastName" placeholder="Last Name"/>
+            </div>
+            <div class="form__field">
+                <label class="form__label" for="email">Email</label>
+                <span class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                <input class="form__input" id="email" type="email" name="email" th:value="${#authentication.getPrincipal().getEmail()}" placeholder="Email"/>
+            </div>
+            <div class="form__field">
+                <label class="form__label" for="phone">Phone Number</label>
+                <span class="error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
+                <input class="form__input" id="phone" type="tel" name="phone" th:value="${#authentication.getPrincipal().getPhone()}" placeholder="Phone Number"/>
+            </div>
+        </form>
+        <form class="home__actions" action="#" th:action="@{/logout}" method="post">
+            <a class="home__actions-link btn dark-green" target="_blank" href="http://roottorisebotanicals.com">Shop Products</a>
+            <button type="submit" class="btn dark-green">Logout</button>
+        </form>
+    </section>
+    <div th:replace="fragment/layout :: 'footer'"></div>
+</main>
+<script th:inline="javascript">
+    const isNumericInput = (event) => {
+        const key = event.keyCode;
+        return ((key >= 48 && key <= 57) || // Allow number line
+            (key >= 96 && key <= 105) // Allow number pad
+        );
+    };
+
+    const isModifierKey = (event) => {
+        const key = event.keyCode;
+        return (event.shiftKey === true || key === 35 || key === 36) || // Allow Shift, Home, End
+            (key === 8 || key === 9 || key === 13 || key === 46) || // Allow Backspace, Tab, Enter, Delete
+            (key > 36 && key < 41) || // Allow left, up, right, down
+            (
+                // Allow Ctrl/Command + A,C,V,X,Z
+                (event.ctrlKey === true || event.metaKey === true) &&
+                (key === 65 || key === 67 || key === 86 || key === 88 || key === 90)
+            )
+    };
+
+    const enforceFormat = (event) => {
+        // Input must be of a valid number format or a modifier key, and not longer than ten digits
+        if(!isNumericInput(event) && !isModifierKey(event)){
+            event.preventDefault();
+        }
+    };
+
+    const formatToPhone = (event) => {
+        if(isModifierKey(event)) {return;}
+
+        const target = event.target;
+        const input = event.target.value.replace(/\D/g,'').substring(0,10); // First ten digits of input only
+        const zip = input.substring(0,3);
+        const middle = input.substring(3,6);
+        const last = input.substring(6,10);
+
+        if(input.length > 6){target.value = `(${zip}) ${middle} - ${last}`;}
+        else if(input.length > 3){target.value = `(${zip}) ${middle}`;}
+        else if(input.length > 0){target.value = `(${zip}`;}
+    };
+
+    const inputElement = document.getElementById('phone');
+    inputElement.addEventListener('keydown',enforceFormat);
+    inputElement.addEventListener('keyup',formatToPhone);
+</script>
+</body>
+</html>

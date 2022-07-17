@@ -32,7 +32,7 @@ public class IdentityClientService implements RegisteredClientRepository {
     public void createIfNotExists(IdentityClient identityClient) {
         if(identityClient == null) throw new InvalidParameterException("Client is required.");
 
-        Optional<IdentityClient> client = identityClientRepository.findById(identityClient.getId());
+        Optional<IdentityClient> client = identityClientRepository.findByClientId(identityClient.getClientId());
         if(client.isPresent()) return;
 
         identityClientRepository.saveAndFlush(identityClient);

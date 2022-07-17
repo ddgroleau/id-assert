@@ -7,10 +7,11 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
+@Table(name="password_reset_tokens")
 public class PasswordResetToken {
     @Id
     @Column(name="password_reset_token_id")
-    private UUID passwordResetTokenId;
+    private String passwordResetTokenId;
 
     @NotNull
     @Column(name="token")
@@ -27,7 +28,7 @@ public class PasswordResetToken {
     public PasswordResetToken() {}
 
     private PasswordResetToken(String token, AppUser appUser) {
-        this.passwordResetTokenId = UUID.randomUUID();
+        this.passwordResetTokenId = UUID.randomUUID().toString();
         this.expiryDate = LocalDateTime.now().plusDays(1);
         this.token = token;
         this.appUser = appUser;
@@ -41,11 +42,19 @@ public class PasswordResetToken {
         return token;
     }
 
-    public UUID getPasswordResetTokenId() {
+    public String getPasswordResetTokenId() {
         return passwordResetTokenId;
     }
 
     public AppUser getAppUser() {
         return appUser;
+    }
+
+    public LocalDateTime getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(LocalDateTime expiryDate) {
+        this.expiryDate = expiryDate;
     }
 }

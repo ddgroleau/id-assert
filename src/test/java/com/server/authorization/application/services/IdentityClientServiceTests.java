@@ -89,10 +89,10 @@ public class IdentityClientServiceTests {
                 "testSecret",
                 "http://test");
 
-        when(identityClientRepository.findById(client.getId())).thenReturn(Optional.of(client));
+        when(identityClientRepository.findByClientId(client.getClientId())).thenReturn(Optional.of(client));
 
         identityClientService.createIfNotExists(client);
-        verify(identityClientRepository,times(1)).findById(client.getId());
+        verify(identityClientRepository,atLeastOnce()).findByClientId(client.getClientId());
     }
 
 

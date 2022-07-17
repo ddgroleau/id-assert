@@ -13,7 +13,7 @@ public class RedirectUri {
     //region Properties
     @Id
     @Column(name="redirect_uri_id")
-    private UUID redirectUriId;
+    private String redirectUriId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="identity_client_id", nullable=false)
@@ -43,7 +43,7 @@ public class RedirectUri {
 
     private RedirectUri(String uri, IdentityClient identityClient) {
         setUri(uri);
-        setRedirectUriId(UUID.randomUUID());
+        setRedirectUriId(UUID.randomUUID().toString());
         setCreatedBy("root");
         setCreatedOn(LocalDateTime.now());
         setUpdatedBy("root");
@@ -64,11 +64,11 @@ public class RedirectUri {
         this.uri = uri;
     }
 
-    public UUID getRedirectUriId() {
+    public String getRedirectUriId() {
         return redirectUriId;
     }
 
-    public void setRedirectUriId(UUID redirectUriId) {
+    public void setRedirectUriId(String redirectUriId) {
         this.redirectUriId = redirectUriId;
     }
 

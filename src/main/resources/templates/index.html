@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/app.css}" type="text/css" />
+</head>
+<body>
+<main>
+    <div th:replace="fragment/layout :: 'header'"></div>
+    <div class="home__user">
+        <div class="home__user-info">
+            <span>🌻 <em>Logged in as:</em> <span th:text="${#authentication.getPrincipal().getUsername()}"></span></span>
+        </div>
+    </div>
+    <section class="home">
+        <p />
+        <form class="home__actions" action="#" th:action="@{/logout}" method="post">
+            <h1 class="home__actions-title">I want to:</h1>
+            <a class="home__actions-link btn dark-green" target="_blank" href="http://roottorisebotanicals.com">Shop Products</a>
+            <a class="home__actions-link btn dark-green" target="_blank"  th:href="@{/user/account}">Manage my Account</a>
+            <button type="submit" class="btn dark-green">Logout</button>
+        </form>
+    </section>
+    <div th:replace="fragment/layout :: 'footer'"></div>
+</main>
+</body>
+</html>

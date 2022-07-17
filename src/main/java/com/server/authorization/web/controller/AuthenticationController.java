@@ -17,7 +17,9 @@ public class AuthenticationController {
 
     @GetMapping("/oauth2/code/id-assert-client-oidc")
     public String getJsonWebToken(@RequestParam String code) {
-        return "redirect:/authorized";
+//        return "redirect:/authorized";
+        return "";
+
     }
 
 }

@@ -23,7 +23,7 @@ public class AppUser implements UserDetails {
     //region Properties
     @Id
     @Column(name="user_id")
-    private UUID userId;
+    private String userId;
 
     @NotNull
     @Column(name="username",unique = true)
@@ -96,7 +96,7 @@ public class AppUser implements UserDetails {
     }
 
     private AppUser(String email, String firstName, String lastName, String password) {
-        setUserId(randomUUID());
+        setUserId(randomUUID().toString());
         setEmail(email);
         setUsername(email);
         setFirstName(firstName);
@@ -124,11 +124,11 @@ public class AppUser implements UserDetails {
     }
 
     //region Getters/Setters
-    public UUID getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    private void setUserId(UUID userId) {
+    private void setUserId(String userId) {
         this.userId = userId;
     }
 
