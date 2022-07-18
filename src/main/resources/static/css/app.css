@@ -40,20 +40,16 @@ main {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .specialChar {
   font-family: serif;
 }
 
-footer {
-    padding-left:5%;
-    position:sticky;
-    position: -webkit-sticky;
-    bottom: 0;
-    background-color: var(--rtr-green-dark);
-    width:100%;
+
+hr {
+    margin-block: 2rem;
 }
 
 header {
@@ -82,10 +78,11 @@ footer {
     flex-flow: row wrap;
     justify-content: space-between;
     color: var(--rtr-military-green);
-    position: absolute;
     bottom: 0;
-    width: 100%;
     padding: 0.5rem max(3rem, 10%);
+    position:sticky;
+    position: -webkit-sticky;
+    width:100%;
 }
 
 footer span {
@@ -407,4 +404,78 @@ footer span {
 
 .home__user-info em{
     font-weight: 500;
+}
+
+
+/*Account*/
+.account {
+    display: flex;
+    flex-direction: column;
+    width: 18rem;
+    padding-block: 2rem;
+    min-height: 80vh;
+}
+
+.account__form {
+    margin-block: 2rem;
+}
+
+.account__profile-title {
+    overflow: hidden;
+    text-align: center;
+    white-space: nowrap;
+    font-weight: 400;
+    color: var(--rtr-green-dark);
+    font-size: large;
+    margin: 0;
+}
+
+.account__profile-title:before, .account__profile-title:after {
+      background-color: var(--rtr-green-dark);
+      content: "";
+      display: inline-block;
+      height: 1px;
+      position: relative;
+      vertical-align: middle;
+      min-width: 1rem;
+}
+
+.account__profile-title:before {
+    margin-right: 1rem;
+}
+
+.account__profile-title:after {
+    margin-left: 1rem;
+}
+
+.account__password-title {
+    overflow: hidden;
+    text-align: center;
+    white-space: nowrap;
+    font-weight: 400;
+    color: var(--rtr-green-dark);
+    font-size: large;
+    margin: 0;
+}
+
+.account__password-title:before, .account__password-title:after {
+      background-color: var(--rtr-green-dark);
+      content: "";
+      display: inline-block;
+      height: 1px;
+      position: relative;
+      vertical-align: middle;
+      min-width: 3rem;
+}
+
+.account__password-title:before {
+    margin-right: 1rem;
+}
+
+.account__password-title:after {
+    margin-left: 1rem;
+}
+
+.account__button {
+    margin-top: 1.5rem;
 }

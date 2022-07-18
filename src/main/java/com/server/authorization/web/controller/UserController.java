@@ -4,10 +4,7 @@ import com.server.authorization.application.domain.model.AppUser;
 import com.server.authorization.application.domain.model.PasswordResetToken;
 import com.server.authorization.application.dto.EventResponseDto;
 import com.server.authorization.application.service.implementation.AppUserService;
-import com.server.authorization.application.viewmodel.AccountViewModel;
-import com.server.authorization.application.viewmodel.CreateUserViewModel;
-import com.server.authorization.application.viewmodel.ForgotPasswordViewModel;
-import com.server.authorization.application.viewmodel.ResetPasswordViewModel;
+import com.server.authorization.application.viewmodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -98,9 +95,8 @@ public class UserController {
             return "reset-password";
         }
 
-    @PostMapping("/change-password")
-    public String changePassword(
-                               @Valid ResetPasswordViewModel resetPasswordViewModel,
+    @PostMapping("/reset-password")
+    public String resetPassword(@Valid ResetPasswordViewModel resetPasswordViewModel,
                                BindingResult result,
                                Model model
     ) {
@@ -116,8 +112,42 @@ public class UserController {
     }
 
     @GetMapping("/account")
-    public String getAccountInfo(AccountViewModel accountInfoViewModel) {
+    public String getAccountInfo(ProfileViewModel profileViewModel, ChangePasswordViewModel changePasswordViewModel, HttpSession session) {
             return "account";
+    }
+
+    @PostMapping("/update-profile")
+    public String updateProfile(@Valid ProfileViewModel profileViewModel,
+                                BindingResult result,
+                                HttpSession session
+    ) {
+        try {
+            session.setAttribute("isSuccess",true);
+            session.setAttribute("profileMessage","Profile information was updated successfully.");
+            return "redirect:/user/account";
+        } catch (Exception e) {
+            log.error("UserController:updateProfile(): Exception thrown: " + e.getMessage());
+            session.setAttribute("isSuccess",false);
+            session.setAttribute("profileMessage","Could not update profile information. Please try again.");
+            return "redirect:/user/account";
+        }
+    }
+
+    @PostMapping("/change-password")
+    public String changePassword(@Valid ChangePasswordViewModel changePasswordViewModel,
+                                BindingResult result,
+                                 HttpSession session
+    ) {
+        try {
+            session.setAttribute("isSuccess",true);
+            session.setAttribute("passwordMessage","Password was updated successfully.");
+            return "redirect:/user/account";
+        } catch (Exception e) {
+            log.error("UserController:changePassword(): Exception thrown: " + e.getMessage());
+            session.setAttribute("isSuccess",false);
+            session.setAttribute("passwordMessage","Could not change password. Please try again.");
+            return "redirect:/user/account";
+        }
     }
 
 }
