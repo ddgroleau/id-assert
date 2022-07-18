@@ -10,6 +10,7 @@ import com.server.authorization.application.repository.abstraction.AppUserReposi
 import com.server.authorization.application.repository.abstraction.PasswordTokenRepository;
 import com.server.authorization.application.service.abstraction.MessageAdapter;
 import com.server.authorization.application.viewmodel.CreateUserViewModel;
+import com.server.authorization.application.viewmodel.UpdateProfileViewModel;
 import com.server.authorization.web.controller.UserController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,8 @@ import java.nio.file.Paths;
 import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
 import java.util.*;
+
+import static com.server.authorization.web.configuration.AuthorizationServerConfiguration.passwordEncoder;
 
 @Service("userDetailsService")
 public class AppUserService implements UserDetailsService {
@@ -152,12 +155,50 @@ public class AppUserService implements UserDetailsService {
             throw new InvalidParameterException("UserId and New Password are required.");
 
         Optional<AppUser> appUser = appUserRepository.findById(userId);
-        if(appUser.isEmpty()) throw new InvalidParameterException("User does not exist.");
+        if(appUser.isEmpty()) throw new UsernameNotFoundException("User does not exist.");
 
         AppUser userEntity = appUser.get();
 
         userEntity.setPassword(newPassword);
         appUserRepository.save(userEntity);
         log.info("AppUserService:changeUserPassword(): Password was reset for " + userEntity.getEmail());
+    }
+
+    public boolean matchesCurrentPassword(String userId, String currentPassword) {
+        if(userId == null || userId.isEmpty() || currentPassword == null || currentPassword.isEmpty())
+            throw new InvalidParameterException("UserId and Current Password are required.");
+
+        Optional<AppUser> appUser = appUserRepository.findById(userId);
+        if(appUser.isEmpty()) throw new UsernameNotFoundException("User does not exist.");
+
+        return passwordEncoder().matches(currentPassword,appUser.get().getPassword());
+    }
+
+    public void updateProfile(UpdateProfileViewModel updateProfileViewModel) {
+        if(updateProfileViewModel == null ) throw new InvalidParameterException("User update information is required.");
+
+        Optional<AppUser> appUser = appUserRepository.findById(updateProfileViewModel.getUserId());
+        if(appUser.isEmpty()) throw new UsernameNotFoundException("User does not exist.");
+
+        AppUser user = appUser.get();
+
+        if(updateProfileViewModel.getFirstName() != null && !updateProfileViewModel.getFirstName().isEmpty())
+            user.setFirstName(updateProfileViewModel.getFirstName());
+        if(updateProfileViewModel.getLastName() != null && !updateProfileViewModel.getLastName().isEmpty())
+            user.setLastName(updateProfileViewModel.getLastName());
+        if(updateProfileViewModel.getPhone() != null && !updateProfileViewModel.getPhone().isEmpty())
+            user.setPhone(updateProfileViewModel.getPhone());
+
+        if(updateProfileViewModel.getEmail() != null && !updateProfileViewModel.getEmail().isEmpty()) {
+            AppUser existingUser = appUserRepository.findByEmail(updateProfileViewModel.getEmail());
+            if(existingUser != null && !existingUser.getUserId().equals(updateProfileViewModel.getUserId()))
+                throw new EntityExistsException("A user already exists with that email.");
+            if (existingUser == null) {
+                user.setEmail(updateProfileViewModel.getEmail());
+                user.setUsername(updateProfileViewModel.getEmail());
+            }
+        }
+
+        appUserRepository.save(user);
     }
 }

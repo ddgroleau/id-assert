@@ -350,6 +350,7 @@ footer span {
     align-items:center;
     width: 18rem;
     padding-bottom: 2rem;
+    min-height: 75vh;
 
 }
 
@@ -478,4 +479,8 @@ footer span {
 
 .account__button {
     margin-top: 1.5rem;
+}
+
+.account__message {
+    margin-top: 1rem;
 }

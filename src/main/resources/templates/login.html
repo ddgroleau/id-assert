@@ -12,17 +12,17 @@
         <div th:replace="fragment/layout :: 'header'"></div>
         <section class="login__form">
             <h1 class="dark-green">Log In</h1>
-            <span class="error" th:if="${param.error}">Invalid username and password.</span>
-            <span th:if="${param.logout}">You have been logged out.</span>
-            <span th:if="${param.signup}">You've been signed up. Please log in.</span>
+            <span class="error"    th:if="${param.error}">Invalid username and password.</span>
+            <span class="success"  th:if="${param.logout}">You have been logged out.</span>
+            <span class="success"  th:if="${param.signup}">You've been signed up. Please log in.</span>
             <form action="#" th:action="@{/login}" th:object="${loginViewModel}" method="post">
                 <div class="form__field">
                     <label class="form__label" for="username">Username</label>
-                    <input class="form__input" id="username" type="text" name="username" th:field="*{username}" placeholder="Username or Email"/>
+                    <input class="form__input" autocomplete="username" id="username" type="text" name="username" th:field="*{username}" placeholder="Username or Email"/>
                 </div>
                 <div class="form__field">
                     <label class="form__label" for="password">Password</label>
-                    <input class="form__input" id="password" type="password" name="password" th:field="*{password}" placeholder="Password"/>
+                    <input class="form__input" autocomplete="current-password" id="password" type="password" name="password" th:field="*{password}" placeholder="Password"/>
                 </div>
                 <div class="login__actions">
                     <button class="btn dark-green" type="submit">Log In</button>

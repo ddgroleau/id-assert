@@ -32,12 +32,12 @@
                 <div class="form__field">
                     <label class="form__label" for="password">Password</label>
                     <span class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
-                    <input class="form__input" type="password" th:field="*{password}" id="password" placeholder="Password">
+                    <input class="form__input" autocomplete="new-password" type="password" th:field="*{password}" id="password" placeholder="Password">
                 </div>
                 <div class="form__field">
                     <label class="form__label" for="confirmPassword">Confirm Password</label>
                     <span class="error" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
-                    <input class="form__input" type="password" th:field="*{confirmPassword}" id="confirmPassword" placeholder="Confirm Password">
+                    <input class="form__input" autocomplete="new-password" type="password" th:field="*{confirmPassword}" id="confirmPassword" placeholder="Confirm Password">
                 </div>
                 <div class="signup__actions">
                     <button class="signup__button  btn dark-green" type="submit"><span>Sign Up</span></button>

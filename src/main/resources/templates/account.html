@@ -12,40 +12,45 @@
     <div th:replace="fragment/layout :: 'header'"></div>
     <section class="account">
         <h1 class="dark-green">Your Account</h1>
-        <form class="account__form" action="#" th:action="@{/user/update-profile}" th:object="${profileViewModel}" method="post">
+        <form id="updateProfile" class="account__form" action="#" th:action="@{/user/update-profile}" th:object="${updateProfileViewModel}" method="post">
             <h2 class="account__profile-title">Profile and Contact Information</h2>
-            <span th:text="${session.profileMessage}"></span>
+            <div class="account__message" th:if="${updateProfileResponse}">
+                <span th:text="${updateProfileResponse.message}" th:class="${updateProfileResponse.isSuccess} ? 'success' : 'error'"></span>
+            </div>
             <div class="form__field">
                 <label class="form__label" for="firstName">First Name</label>
                 <span class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
-                <input class="form__input" id="firstName" th:value="${#authentication.getPrincipal().getFirstName()}" type="text" name="firstName" placeholder="First Name"/>
+                <input class="form__input" th:value="${#authentication.getPrincipal().getFirstName()}" name="firstName" id="firstName" type="text" placeholder="First Name"/>
             </div>
             <div class="form__field">
                 <label class="form__label" for="lastName">Last Name</label>
-                <span class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{email}"></span>
-                <input class="form__input" id="lastName" type="text" th:value="${#authentication.getPrincipal().getLastName()}" name="lastName" placeholder="Last Name"/>
+                <span class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
+                <input class="form__input" th:value="${#authentication.getPrincipal().getLastName()}" name="lastName" id="lastName" type="text" placeholder="Last Name"/>
             </div>
             <div class="form__field">
                 <label class="form__label" for="email">Email</label>
                 <span class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
-                <input class="form__input" id="email" type="email" name="email" th:value="${#authentication.getPrincipal().getEmail()}" placeholder="Email"/>
+                <input class="form__input" th:value="${#authentication.getPrincipal().getEmail()}" name="email" id="email" type="email" placeholder="Email"/>
             </div>
             <div class="form__field">
                 <label class="form__label" for="phone">Phone Number</label>
                 <span class="error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
-                <input class="form__input" id="phone" type="tel" name="phone" th:value="${#authentication.getPrincipal().getPhone()}" placeholder="Phone Number"/>
+                <input class="form__input" th:value="${#authentication.getPrincipal().getPhone()}" name="phone" id="phone" type="tel" placeholder="Phone Number"/>
             </div>
             <div class="account__button">
-                <button class="btn dark-green" type="submit">Update Profile</button>
+                <input type="hidden" th:value="${#authentication.getPrincipal().getUserId()}" name="userId" />
+                <button class="btn dark-green" form="updateProfile" type="submit">Update Profile</button>
             </div>
         </form>
-        <form class="account__form" action="#" th:action="@{/user/change-password}" th:object="${changePasswordViewModel}" method="post">
+        <form class="account__form" id="changePassword" action="#" th:action="@{/user/change-password}" th:object="${changePasswordViewModel}" method="post">
             <h2 class="account__password-title">Change Your Password</h2>
-            <span th:text="${session.passwordMessage}"></span>
+            <div class="account__message" th:if="${changePasswordResponse}">
+                <span th:text="${changePasswordResponse.message}" class="account__message" th:class="${changePasswordResponse.isSuccess} ? 'success' : 'error'"></span>
+            </div>
             <div class="form__field">
                 <label class="form__label" for="currentPassword">Current Password</label>
                 <span class="error" th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}"></span>
-                <input class="form__input" type="password" th:field="*{newPassword}" id="currentPassword" placeholder="Enter your current password">
+                <input class="form__input" type="password" th:field="*{currentPassword}" id="currentPassword" placeholder="Enter your current password">
             </div>
             <div class="form__field">
                 <label class="form__label" for="newPassword">New Password</label>
@@ -55,11 +60,11 @@
             <div class="form__field">
                 <label class="form__label" for="confirmNewPassword">Confirm New Password</label>
                 <span class="error" th:if="${#fields.hasErrors('confirmNewPassword')}" th:errors="*{confirmNewPassword}"></span>
-                <input class="form__input" type="password" th:field="*{confirmNewPassword}" id="confirmNewPassword" placeholder="Confirm your new password">
+                <input class="form__input" type="password" th:field="*{confirmNewPassword}" name="confirmNewPassword" id="confirmNewPassword" placeholder="Confirm your new password">
             </div>
             <div class="account__button">
                 <input type="hidden" th:value="${#authentication.getPrincipal().getUserId()}" name="userId" />
-                <button class="btn dark-green" type="submit">Change Password</button>
+                <button class="btn dark-green" form="changePassword" type="submit">Change Password</button>
             </div>
         </form>
         <hr/>

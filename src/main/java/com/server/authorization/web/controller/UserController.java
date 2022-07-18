@@ -8,12 +8,15 @@ import com.server.authorization.application.viewmodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.persistence.EntityExistsException;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.UUID;
@@ -100,6 +103,7 @@ public class UserController {
                                BindingResult result,
                                Model model
     ) {
+        if (result.hasErrors()) return "reset-password";
         try {
             log.info("UserController:changePassword(): Request to change password for user with Id: " + resetPasswordViewModel.getUserId());
             appUserService.changeUserPassword(resetPasswordViewModel.getUserId(),resetPasswordViewModel.getNewPassword());
@@ -112,40 +116,87 @@ public class UserController {
     }
 
     @GetMapping("/account")
-    public String getAccountInfo(ProfileViewModel profileViewModel, ChangePasswordViewModel changePasswordViewModel, HttpSession session) {
+    public String getAccountInfo(UpdateProfileViewModel updateProfileViewModel,
+                                 ChangePasswordViewModel changePasswordViewModel,
+                                 RedirectAttributes redirectAttributes,
+                                 @AuthenticationPrincipal AppUser appUser
+    ) {
+        try {
+            AppUser user = appUserService.findUserByEmail(appUser.getEmail());
+
+            appUser.setPhone(user.getPhone());
+            appUser.setLastName(user.getLastName());
+            appUser.setFirstName(user.getFirstName());
+            appUser.setEmail(user.getEmail());
+            appUser.setPassword(user.getPassword());
+
+        } catch (Exception e) {
+            log.error("UserController:getAccountInfo(): Exception thrown: " + e.getMessage());
+        }
+        finally {
             return "account";
+        }
     }
 
     @PostMapping("/update-profile")
-    public String updateProfile(@Valid ProfileViewModel profileViewModel,
+    public String updateProfile(@Valid UpdateProfileViewModel updateProfileViewModel,
                                 BindingResult result,
-                                HttpSession session
+                                Model model,
+                                RedirectAttributes redirectAttributes,
+                                ChangePasswordViewModel changePasswordViewModel
     ) {
+        if (result.hasErrors()) return "account";
         try {
-            session.setAttribute("isSuccess",true);
-            session.setAttribute("profileMessage","Profile information was updated successfully.");
-            return "redirect:/user/account";
-        } catch (Exception e) {
+            appUserService.updateProfile(updateProfileViewModel);
+            EventResponseDto responseDto = EventResponseDto.createResponse(true,"Profile information was updated successfully.");
+            redirectAttributes.addFlashAttribute("updateProfileResponse",responseDto);
+        } catch (EntityExistsException e) {
             log.error("UserController:updateProfile(): Exception thrown: " + e.getMessage());
-            session.setAttribute("isSuccess",false);
-            session.setAttribute("profileMessage","Could not update profile information. Please try again.");
+            EventResponseDto responseDto = EventResponseDto.createResponse(false,"A user with that email already exists.");
+            redirectAttributes.addFlashAttribute("updateProfileResponse",responseDto);
+        }
+        catch (Exception e) {
+            log.error("UserController:updateProfile(): Exception thrown: " + e.getMessage());
+            EventResponseDto responseDto = EventResponseDto.createResponse(false,"Could not update profile information. Please try again.");
+            redirectAttributes.addFlashAttribute("updateProfileResponse",responseDto);
+        }
+        finally {
             return "redirect:/user/account";
         }
     }
 
     @PostMapping("/change-password")
     public String changePassword(@Valid ChangePasswordViewModel changePasswordViewModel,
-                                BindingResult result,
-                                 HttpSession session
-    ) {
+                                 BindingResult result,
+                                 Model model,
+                                 RedirectAttributes redirectAttributes,
+                                 UpdateProfileViewModel updateProfileViewModel
+                                 ) {
+        if (result.hasErrors()) return "account";
         try {
-            session.setAttribute("isSuccess",true);
-            session.setAttribute("passwordMessage","Password was updated successfully.");
-            return "redirect:/user/account";
+            boolean confirmPassAndNewPassMatch =
+                    changePasswordViewModel.getConfirmNewPassword().equals(changePasswordViewModel.getNewPassword());
+
+            boolean currentPassIsValid = appUserService.matchesCurrentPassword(
+                    changePasswordViewModel.getUserId(),
+                    changePasswordViewModel.getCurrentPassword());
+
+            if(confirmPassAndNewPassMatch && currentPassIsValid) {
+                appUserService.changeUserPassword(changePasswordViewModel.getUserId(),changePasswordViewModel.getNewPassword());
+                EventResponseDto changePasswordResponse = EventResponseDto.createResponse(true,"Password was updated successfully.");
+                redirectAttributes.addFlashAttribute("changePasswordResponse",changePasswordResponse);
+            } else {
+                String message = confirmPassAndNewPassMatch ?
+                        "The current password you entered is not valid." : "New password and confirm password do not match.";
+                EventResponseDto changePasswordResponse = EventResponseDto.createResponse(false,message);
+                redirectAttributes.addFlashAttribute("changePasswordResponse",changePasswordResponse);
+            }
         } catch (Exception e) {
             log.error("UserController:changePassword(): Exception thrown: " + e.getMessage());
-            session.setAttribute("isSuccess",false);
-            session.setAttribute("passwordMessage","Could not change password. Please try again.");
+            EventResponseDto changePasswordResponse = EventResponseDto.createResponse(false,"Could not change password. Please try again.");
+            redirectAttributes.addFlashAttribute("changePasswordResponse",changePasswordResponse);
+        }
+        finally {
             return "redirect:/user/account";
         }
     }

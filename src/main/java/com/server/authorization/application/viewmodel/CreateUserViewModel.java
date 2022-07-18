@@ -1,5 +1,7 @@
 package com.server.authorization.application.viewmodel;
 
+import com.server.authorization.application.validation.ValidPassword;
+
 import javax.validation.constraints.NotEmpty;
 
 public class CreateUserViewModel {
@@ -11,7 +13,6 @@ public class CreateUserViewModel {
     @NotEmpty(message = "Last Name is required.")
     private String lastName;
 
-    @NotEmpty(message = "Password is required.")
     private String password;
 
     @NotEmpty(message = "Confirm Password is required.")

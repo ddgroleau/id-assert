@@ -1,14 +1,11 @@
 package com.server.authorization.application.viewmodel;
 
-import com.server.authorization.application.dto.EventResponseDto;
-
 import javax.validation.constraints.NotEmpty;
 
 public class ResetPasswordViewModel {
     @NotEmpty(message = "Password is required.")
     private String newPassword;
 
-    @NotEmpty(message = "Confirm Password is required.")
     private String confirmNewPassword;
 
     private String userId;

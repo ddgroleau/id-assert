@@ -4,16 +4,18 @@ import com.server.authorization.application.domain.model.AppUser;
 import com.server.authorization.application.domain.model.PasswordResetToken;
 import com.server.authorization.application.dto.EventResponseDto;
 import com.server.authorization.application.dto.MessageDto;
-import com.server.authorization.application.pojo.MessageMediaTypes;
 import com.server.authorization.application.repository.abstraction.AppUserRepository;
 import com.server.authorization.application.repository.abstraction.PasswordTokenRepository;
-import com.server.authorization.application.service.implementation.AppUserService;
 import com.server.authorization.application.service.abstraction.MessageAdapter;
+import com.server.authorization.application.service.implementation.AppUserService;
 import com.server.authorization.application.service.implementation.EmailClient;
 import com.server.authorization.application.viewmodel.CreateUserViewModel;
+import com.server.authorization.application.viewmodel.UpdateProfileViewModel;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -286,7 +288,101 @@ public class AppUserServiceTests {
 
         appUserService.changeUserPassword(user.getUserId(),newPassword);
 
-        verify(appUserRepository, times(1)).save(any(AppUser.class));
+        verify(appUserRepository, atLeastOnce()).save(any(AppUser.class));
+    }
+
+    @Test
+    void changeUserPassword_withNonExistentUserAndNewPassword_throwsException() {
+        when(appUserRepository.findById(any(String.class))).thenReturn(Optional.empty());
+        UsernameNotFoundException exception =
+                assertThrows(UsernameNotFoundException.class,()->
+                        appUserService.changeUserPassword("badUserId","newPassword"));
+
+        assertEquals("User does not exist.", exception.getMessage());
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {",pass","id,","id,null","null,pass"}, nullValues = "null")
+    void changeUserPassword_withInvalidParameters_throwsException(String userid, String newPassword) {
+        InvalidParameterException exception =
+                assertThrows(InvalidParameterException.class,()->
+                        appUserService.changeUserPassword(userid,newPassword));
+
+        assertEquals("UserId and New Password are required.", exception.getMessage());
+    }
+
+    @Test
+    void matchesCurrentPassword_withValidUserAndMatchingPassword_returnsTrue() {
+        String currentPassword = "currentPass";
+        AppUser user = AppUser.createNewUser("testEmail","testFirst","testLast",currentPassword);
+        when(appUserRepository.findById(user.getUserId())).thenReturn(Optional.of(user));
+
+        assertTrue(appUserService.matchesCurrentPassword(user.getUserId(),currentPassword));
+        verify(appUserRepository, times(1)).findById(user.getUserId());
+    }
+
+    @Test
+    void matchesCurrentPassword_withValidUserAndNonMatchingPassword_returnsFalse() {
+        String currentPassword = "currentPass";
+        AppUser user = AppUser.createNewUser("testEmail","testFirst","testLast","differentPassword");
+        when(appUserRepository.findById(user.getUserId())).thenReturn(Optional.of(user));
+
+        assertFalse(appUserService.matchesCurrentPassword(user.getUserId(),currentPassword));
+        verify(appUserRepository, times(1)).findById(user.getUserId());
+    }
+
+    @Test
+    void matchesCurrentPassword_withNonExistentUserAndCurrentPassword_throwsException() {
+        when(appUserRepository.findById(any(String.class))).thenReturn(Optional.empty());
+        UsernameNotFoundException exception =
+                assertThrows(UsernameNotFoundException.class,()->
+                        appUserService.matchesCurrentPassword("badUserId","newPassword"));
+
+        assertEquals("User does not exist.", exception.getMessage());
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {",pass","id,","id,null","null,pass"}, nullValues = "null")
+    void matchesCurrentPassword_withInvalidParameters_throwsException(String userid, String currentPass) {
+        InvalidParameterException exception =
+                assertThrows(InvalidParameterException.class,()->
+                        appUserService.matchesCurrentPassword(userid,currentPass));
+
+        assertEquals("UserId and Current Password are required.", exception.getMessage());
+    }
+
+    @Test
+    void updateProfile_withValidViewModel_updatesUser() {
+        AppUser user = AppUser.createNewUser("updateEmail","updateFirst","updateLast","updatePass");
+        when(appUserRepository.findById(user.getUserId())).thenReturn(Optional.of(user));
+        when(appUserRepository.save(any(AppUser.class))).thenReturn(user);
+        UpdateProfileViewModel updateProfileViewModel = UpdateProfileViewModel.createInstance(
+                user.getUserId(),"first", "last", "email", "phone");
+
+        appUserService.updateProfile(updateProfileViewModel);
+
+        verify(appUserRepository,atLeastOnce()).save(any(AppUser.class));
+    }
+
+    @Test
+    void updateProfile_withNonExistentUser_throwsException() {
+        UpdateProfileViewModel updateProfileViewModel = UpdateProfileViewModel.createInstance(
+                "id","first", "last", "email", "phone");
+        when(appUserRepository.findById("id")).thenReturn(Optional.empty());
+        UsernameNotFoundException exception =
+                assertThrows(UsernameNotFoundException.class,()->
+                        appUserService.updateProfile(updateProfileViewModel));
+
+        assertEquals("User does not exist.", exception.getMessage());
+    }
+
+    @Test
+    void updateProfile_withInvalidViewModel_throwsException() {
+        InvalidParameterException exception =
+                assertThrows(InvalidParameterException.class,()->
+                        appUserService.updateProfile(null));
+
+        assertEquals("User update information is required.", exception.getMessage());
     }
 
 }
