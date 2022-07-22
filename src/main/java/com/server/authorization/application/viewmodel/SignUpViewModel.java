@@ -1,10 +1,12 @@
 package com.server.authorization.application.viewmodel;
 
+import com.server.authorization.application.validation.FieldsValueMatch;
 import com.server.authorization.application.validation.ValidPassword;
 
 import javax.validation.constraints.NotEmpty;
 
-public class CreateUserViewModel {
+
+public class SignUpViewModel {
     @NotEmpty(message = "Email is required.")
     private String email;
     @NotEmpty(message = "First Name is required.")
@@ -13,9 +15,9 @@ public class CreateUserViewModel {
     @NotEmpty(message = "Last Name is required.")
     private String lastName;
 
+    @ValidPassword
     private String password;
 
-    @NotEmpty(message = "Confirm Password is required.")
     private String confirmPassword;
 
     public String getEmail() {

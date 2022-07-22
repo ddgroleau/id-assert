@@ -9,7 +9,7 @@ import com.server.authorization.application.repository.abstraction.PasswordToken
 import com.server.authorization.application.service.abstraction.MessageAdapter;
 import com.server.authorization.application.service.implementation.AppUserService;
 import com.server.authorization.application.service.implementation.EmailClient;
-import com.server.authorization.application.viewmodel.CreateUserViewModel;
+import com.server.authorization.application.viewmodel.SignUpViewModel;
 import com.server.authorization.application.viewmodel.UpdateProfileViewModel;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -67,7 +67,7 @@ public class AppUserServiceTests {
 
     @Test
     void createUser_withNewUser_returnsSuccessfully() {
-        CreateUserViewModel createUserViewModel = new CreateUserViewModel(){{
+        SignUpViewModel signUpViewModel = new SignUpViewModel(){{
             setFirstName("testFirst");
             setLastName("testLast");
             setEmail("test@email.com");
@@ -75,23 +75,23 @@ public class AppUserServiceTests {
             setConfirmPassword("testPass");
         }};
         AppUser newUser = AppUser.createNewUser(
-                createUserViewModel.getEmail(),
-                createUserViewModel.getFirstName(),
-                createUserViewModel.getLastName(),
-                createUserViewModel.getPassword()
+                signUpViewModel.getEmail(),
+                signUpViewModel.getFirstName(),
+                signUpViewModel.getLastName(),
+                signUpViewModel.getPassword()
         );
 
-        when(appUserRepository.findByUsername(createUserViewModel.getEmail())).thenReturn(null);
+        when(appUserRepository.findByUsername(signUpViewModel.getEmail())).thenReturn(null);
         when(appUserRepository.saveAndFlush(any(AppUser.class))).thenReturn(newUser);
 
-        appUserService.createUser(createUserViewModel);
+        appUserService.createUser(signUpViewModel);
 
         verify(appUserRepository,times(1)).saveAndFlush(any(AppUser.class));
     }
 
     @Test
     void createUser_withExistingUser_throwsException() {
-        CreateUserViewModel createUserViewModel = new CreateUserViewModel(){{
+        SignUpViewModel signUpViewModel = new SignUpViewModel(){{
             setFirstName("testFirst");
             setLastName("testLast");
             setEmail("test@email.com");
@@ -99,15 +99,15 @@ public class AppUserServiceTests {
             setConfirmPassword("testPass");
         }};
 
-        when(appUserRepository.findByUsername(createUserViewModel.getEmail())).thenReturn(AppUser.createNewUser(
-                createUserViewModel.getEmail(),
-                createUserViewModel.getFirstName(),
-                createUserViewModel.getLastName(),
-                createUserViewModel.getPassword()
+        when(appUserRepository.findByUsername(signUpViewModel.getEmail())).thenReturn(AppUser.createNewUser(
+                signUpViewModel.getEmail(),
+                signUpViewModel.getFirstName(),
+                signUpViewModel.getLastName(),
+                signUpViewModel.getPassword()
         ));
 
         InvalidParameterException exception =
-                assertThrows(InvalidParameterException.class,()-> appUserService.createUser(createUserViewModel));
+                assertThrows(InvalidParameterException.class,()-> appUserService.createUser(signUpViewModel));
 
         assertEquals("Username not available.", exception.getMessage());
     }

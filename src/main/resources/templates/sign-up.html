@@ -13,7 +13,7 @@
         <section class="signup__form">
             <h1>Sign Up</h1>
             <span class="error" th:if="${#fields.hasErrors('global')}" th:text="${err}" th:each="err : ${#fields.errors('global')}" />
-            <form action="#" th:action="@{/user/create}" th:object="${createUserViewModel}" method="post">
+            <form action="#" th:action="@{/user/create}" th:object="${signUpViewModel}" method="post">
                 <div class="form__field">
                     <label class="form__label" for="firstName">First Name</label>
                     <span class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
@@ -30,14 +30,14 @@
                     <input class="form__input" type="text" th:field="*{email}" id="email" placeholder="Email">
                 </div>
                 <div class="form__field">
-                    <label class="form__label" for="password">Password</label>
+                    <label class="form__label" for="newPassword">Password</label>
                     <span class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
-                    <input class="form__input" autocomplete="new-password" type="password" th:field="*{password}" id="password" placeholder="Password">
+                    <input class="form__input" oninput="verifyPasswordMatch()" autocomplete="new-password" type="password" th:field="*{password}" id="newPassword" placeholder="Password">
                 </div>
                 <div class="form__field">
-                    <label class="form__label" for="confirmPassword">Confirm Password</label>
-                    <span class="error" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
-                    <input class="form__input" autocomplete="new-password" type="password" th:field="*{confirmPassword}" id="confirmPassword" placeholder="Confirm Password">
+                    <label class="form__label" for="confirmNewPassword">Confirm Password</label>
+                    <span id="confirmNewPassMessage" class="error" ></span>
+                    <input class="form__input" oninput="verifyPasswordMatch()" autocomplete="new-password" type="password" th:field="*{confirmPassword}" id="confirmNewPassword" placeholder="Confirm Password">
                 </div>
                 <div class="signup__actions">
                     <button class="signup__button  btn dark-green" type="submit"><span>Sign Up</span></button>
@@ -52,5 +52,6 @@
         </section>
         <div th:replace="fragment/layout :: 'footer'"></div>
     </main>
+    <script type="text/javascript" th:src="@{/js/confirmPasswordInputHandler.js}"></script>
 </body>
 </html>

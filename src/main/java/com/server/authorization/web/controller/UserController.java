@@ -32,7 +32,7 @@ public class UserController {
             this.appUserService = appUserService;
         }
         @GetMapping("/sign-up")
-        public String signUp(CreateUserViewModel createUserViewModel) {
+        public String signUp(SignUpViewModel signUpViewModel) {
             return "sign-up";
         }
 
@@ -42,11 +42,11 @@ public class UserController {
         }
 
         @PostMapping("/create")
-        public String createUser(@Valid CreateUserViewModel createUserViewModel, BindingResult result, Model model) {
+        public String createUser(@Valid SignUpViewModel signUpViewModel, BindingResult result, Model model) {
             try {
                 if (result.hasErrors()) return "sign-up";
 
-                appUserService.createUser(createUserViewModel);
+                appUserService.createUser(signUpViewModel);
 
                 return "redirect:/login";
             }

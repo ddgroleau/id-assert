@@ -18,10 +18,10 @@ public class ChangePasswordViewModel {
     @NotEmpty(message = "Current Password is required.")
     private String currentPassword;
 
+    @ValidPassword
     private String newPassword;
 
     private String confirmNewPassword;
-
 
     public String getUserId() {
         return userId;

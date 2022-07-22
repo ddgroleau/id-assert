@@ -1,22 +1,19 @@
 package com.server.authorization.application.service.implementation;
 
-import com.nimbusds.openid.connect.sdk.federation.trust.InvalidEntityMetadataException;
 import com.server.authorization.application.domain.model.AppUser;
-import com.server.authorization.application.dto.EventResponseDto;
-import com.server.authorization.application.pojo.MessageMediaTypes;
 import com.server.authorization.application.domain.model.PasswordResetToken;
+import com.server.authorization.application.dto.EventResponseDto;
 import com.server.authorization.application.dto.MessageDto;
+import com.server.authorization.application.pojo.MessageMediaTypes;
 import com.server.authorization.application.repository.abstraction.AppUserRepository;
 import com.server.authorization.application.repository.abstraction.PasswordTokenRepository;
 import com.server.authorization.application.service.abstraction.MessageAdapter;
-import com.server.authorization.application.viewmodel.CreateUserViewModel;
+import com.server.authorization.application.viewmodel.SignUpViewModel;
 import com.server.authorization.application.viewmodel.UpdateProfileViewModel;
-import com.server.authorization.web.controller.UserController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,14 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import javax.persistence.EntityExistsException;
-import javax.validation.constraints.Email;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.Set;
 
 import static com.server.authorization.web.configuration.AuthorizationServerConfiguration.passwordEncoder;
 
@@ -66,19 +61,19 @@ public class AppUserService implements UserDetailsService {
         return user;
     }
 
-    public void createUser(CreateUserViewModel createUserViewModel) {
-        if(createUserViewModel == null) throw new InvalidParameterException("New user is required.");
+    public void createUser(SignUpViewModel signUpViewModel) {
+        if(signUpViewModel == null) throw new InvalidParameterException("New user is required.");
 
-        AppUser appUser = appUserRepository.findByUsername(createUserViewModel.getEmail());
+        AppUser appUser = appUserRepository.findByUsername(signUpViewModel.getEmail());
         if(appUser != null) throw new InvalidParameterException("Username not available.");
 
         this.appUserRepository.saveAndFlush(AppUser.createNewUser(
-                createUserViewModel.getEmail(),
-                createUserViewModel.getFirstName(),
-                createUserViewModel.getLastName(),
-                createUserViewModel.getPassword()
+                signUpViewModel.getEmail(),
+                signUpViewModel.getFirstName(),
+                signUpViewModel.getLastName(),
+                signUpViewModel.getPassword()
         ));
-        log.info("AppUserService:createUser(): New user created with email: " + createUserViewModel.getEmail());
+        log.info("AppUserService:createUser(): New user created with email: " + signUpViewModel.getEmail());
         return;
     }
 

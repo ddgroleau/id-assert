@@ -1,9 +1,17 @@
 package com.server.authorization.application.viewmodel;
 
-import javax.validation.constraints.NotEmpty;
+import com.server.authorization.application.validation.FieldsValueMatch;
+import com.server.authorization.application.validation.ValidPassword;
 
+@FieldsValueMatch.List({
+        @FieldsValueMatch(
+                field = "newPassword",
+                fieldMatch = "confirmNewPassword",
+                message = "Passwords do not match."
+        )
+})
 public class ResetPasswordViewModel {
-    @NotEmpty(message = "Password is required.")
+    @ValidPassword
     private String newPassword;
 
     private String confirmNewPassword;

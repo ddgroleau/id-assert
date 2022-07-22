@@ -55,12 +55,12 @@
             <div class="form__field">
                 <label class="form__label" for="newPassword">New Password</label>
                 <span class="error" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}"></span>
-                <input class="form__input" type="password" th:field="*{newPassword}" id="newPassword" placeholder="Enter your new password">
+                <input class="form__input" oninput="verifyPasswordMatch()" type="password" th:field="*{newPassword}" id="newPassword" placeholder="Enter your new password">
             </div>
             <div class="form__field">
                 <label class="form__label" for="confirmNewPassword">Confirm New Password</label>
-                <span class="error" th:if="${#fields.hasErrors('confirmNewPassword')}" th:errors="*{confirmNewPassword}"></span>
-                <input class="form__input" type="password" th:field="*{confirmNewPassword}" name="confirmNewPassword" id="confirmNewPassword" placeholder="Confirm your new password">
+                <span id="confirmNewPassMessage" class="error" ></span>
+                <input class="form__input" oninput="verifyPasswordMatch()" type="password" th:field="*{confirmNewPassword}" name="confirmNewPassword" id="confirmNewPassword" placeholder="Confirm your new password">
             </div>
             <div class="account__button">
                 <input type="hidden" th:value="${#authentication.getPrincipal().getUserId()}" name="userId" />
@@ -69,13 +69,14 @@
         </form>
         <hr/>
         <form class="home__actions" action="#" th:action="@{/logout}" method="post">
-            <a class="home__actions-link btn dark-green" target="_blank" href="http://roottorisebotanicals.com">Shop Products</a>
-            <a class="home__actions-link btn dark-green" target="_blank" href="/">Return to Home</a>
+            <a class="home__actions-link btn dark-green" href="http://roottorisebotanicals.com">Shop Products</a>
+            <a class="home__actions-link btn dark-green" href="/">Return to Home</a>
             <button type="submit" class="btn dark-green">Logout</button>
         </form>
     </section>
     <div th:replace="fragment/layout :: 'footer'"></div>
 </main>
 <script type="text/javascript" th:src="@{/js/phoneInputHandler.js}"></script>
+<script type="text/javascript" th:src="@{/js/confirmPasswordInputHandler.js}"></script>
 </body>
 </html>

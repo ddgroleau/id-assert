@@ -15,9 +15,6 @@ public class UpdateProfileViewModel {
     private String email;
     private String phone;
 
-    public UpdateProfileViewModel() {
-
-    }
     private UpdateProfileViewModel(String userId, String firstName, String lastName, String email, String phone) {
         this.userId = userId;
         this.firstName = firstName;
