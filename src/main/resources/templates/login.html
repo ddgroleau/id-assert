@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/app.css}" type="text/css" />
+</head>
+<body>
+    <main>
+        <div th:replace="fragment/layout :: 'header'"></div>
+        <section class="login__form">
+            <h1 class="dark-green">Log In</h1>
+            <span class="error"    th:if="${param.error}">Invalid username and password.</span>
+            <span class="success"  th:if="${param.logout}">You have been logged out.</span>
+            <span class="success"  th:if="${param.signup}">You've been signed up. Please log in.</span>
+            <form action="#" th:action="@{/login}" th:object="${loginViewModel}" method="post">
+                <div class="form__field">
+                    <label class="form__label" for="username">Username</label>
+                    <input class="form__input" autocomplete="username" id="username" type="text" name="username" th:field="*{username}" placeholder="Username or Email"/>
+                </div>
+                <div class="form__field">
+                    <label class="form__label" for="password">Password</label>
+                    <input class="form__input" autocomplete="current-password" id="password" type="password" name="password" th:field="*{password}" placeholder="Password"/>
+                </div>
+                <div class="login__actions">
+                    <button class="btn dark-green" type="submit">Log In</button>
+                    <a th:href="@{/user/forgot-password}" class="dark-green">Forgot Password</a>
+                </div>
+            </form>
+<!--            <div class="login__alt">-->
+<!--                <h2 class="login__alt-title">Or log in with:</h2>-->
+<!--                    <a class="login__alt-link" th:href="@{/oauth2/authorization/google}">-->
+<!--                        <img th:src="@{../media/google-logo.svg}" width="32px" height= "32px" alt="Google Logo" />-->
+<!--                    </a>-->
+<!--            </div>-->
+            <div class="login__signup">
+                <h2 class="login__signup-title">
+                    Don't have an account yet?
+                    <a class="dark-green" th:href="@{/user/sign-up}">
+                        Sign Up
+                    </a>
+                </h2>
+                <button class="login__signup-button btn dark-green">Continue as Guest</button>
+            </div>
+        </section>
+        <div th:replace="fragment/layout :: 'footer'"></div>
+    </main>
+</body>
+</html>

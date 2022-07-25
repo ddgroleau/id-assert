@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Account</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/app.css}" type="text/css" />
+</head>
+<body>
+<main>
+    <div th:replace="fragment/layout :: 'header'"></div>
+    <section class="account">
+        <h1 class="dark-green">Your Account</h1>
+        <form id="updateProfile" class="account__form" action="#" th:action="@{/user/update-profile}" th:object="${updateProfileViewModel}" method="post">
+            <h2 class="account__profile-title">Profile and Contact Information</h2>
+            <div class="account__message" th:if="${updateProfileResponse}">
+                <span th:text="${updateProfileResponse.message}" th:class="${updateProfileResponse.isSuccess} ? 'success' : 'error'"></span>
+            </div>
+            <div class="form__field">
+                <label class="form__label" for="firstName">First Name</label>
+                <span class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
+                <input class="form__input" th:value="${#authentication.getPrincipal().getFirstName()}" name="firstName" id="firstName" type="text" placeholder="First Name"/>
+            </div>
+            <div class="form__field">
+                <label class="form__label" for="lastName">Last Name</label>
+                <span class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
+                <input class="form__input" th:value="${#authentication.getPrincipal().getLastName()}" name="lastName" id="lastName" type="text" placeholder="Last Name"/>
+            </div>
+            <div class="form__field">
+                <label class="form__label" for="email">Email</label>
+                <span class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                <input class="form__input" th:value="${#authentication.getPrincipal().getEmail()}" name="email" id="email" type="email" placeholder="Email"/>
+            </div>
+            <div class="form__field">
+                <label class="form__label" for="phone">Phone Number</label>
+                <span class="error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
+                <input class="form__input" th:value="${#authentication.getPrincipal().getPhone()}" name="phone" id="phone" type="tel" placeholder="Phone Number"/>
+            </div>
+            <div class="account__button">
+                <input type="hidden" th:value="${#authentication.getPrincipal().getUserId()}" name="userId" />
+                <button class="btn dark-green" form="updateProfile" type="submit">Update Profile</button>
+            </div>
+        </form>
+        <form class="account__form" id="changePassword" action="#" th:action="@{/user/change-password}" th:object="${changePasswordViewModel}" method="post">
+            <h2 class="account__password-title">Change Your Password</h2>
+            <div class="account__message" th:if="${changePasswordResponse}">
+                <span th:text="${changePasswordResponse.message}" class="account__message" th:class="${changePasswordResponse.isSuccess} ? 'success' : 'error'"></span>
+            </div>
+            <div class="form__field">
+                <label class="form__label" for="currentPassword">Current Password</label>
+                <span class="error" th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}"></span>
+                <input class="form__input" type="password" th:field="*{currentPassword}" id="currentPassword" placeholder="Enter your current password">
+            </div>
+            <div class="form__field">
+                <label class="form__label" for="newPassword">New Password</label>
+                <span class="error" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}"></span>
+                <input class="form__input" oninput="verifyPasswordMatch()" type="password" th:field="*{newPassword}" id="newPassword" placeholder="Enter your new password">
+            </div>
+            <div class="form__field">
+                <label class="form__label" for="confirmNewPassword">Confirm New Password</label>
+                <span id="confirmNewPassMessage" class="error" ></span>
+                <input class="form__input" oninput="verifyPasswordMatch()" type="password" th:field="*{confirmNewPassword}" name="confirmNewPassword" id="confirmNewPassword" placeholder="Confirm your new password">
+            </div>
+            <div class="account__button">
+                <input type="hidden" th:value="${#authentication.getPrincipal().getUserId()}" name="userId" />
+                <button class="btn dark-green" form="changePassword" type="submit">Change Password</button>
+            </div>
+        </form>
+        <hr/>
+        <form class="home__actions" action="#" th:action="@{/logout}" method="post">
+            <a class="home__actions-link btn dark-green" href="http://roottorisebotanicals.com">Shop Products</a>
+            <a class="home__actions-link btn dark-green" href="/">Return to Home</a>
+            <button type="submit" class="btn dark-green">Logout</button>
+        </form>
+    </section>
+    <div th:replace="fragment/layout :: 'footer'"></div>
+</main>
+<script type="text/javascript" th:src="@{/js/phoneInputHandler.js}"></script>
+<script type="text/javascript" th:src="@{/js/confirmPasswordInputHandler.js}"></script>
+</body>
+</html>

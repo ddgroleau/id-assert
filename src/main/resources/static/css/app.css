@@ -1,0 +1,486 @@
+/*Globals*/
+@font-face {
+  font-family: "Seasons";
+  src: url("./fonts/Fontspring-DEMO-theseasons-reg.otf");
+}
+
+:root {
+    --rtr-military-green: #7E7F1E;
+    --rtr-green-dark: #073221;
+    --rtr-tan: #E0DDD7;
+    --rtr-eggshell: #F1F1F1;
+    --rtr-seagreen: #405E5C;
+    --rtr-olive-drab: #BDB048;
+    --rtr-brown-clay: #99634E;
+    --rtr-green: #063723;
+    --rtr-shadow: rgba(0,0,0,.4);
+    --rtr-red: #D62839;
+    --font: font-family: "Seasons", serif, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  background-color: #E0DDD7;
+  font-family: var(--font);
+}
+
+* {
+  overflow-x: hidden;
+    padding: 0;
+    margin: 0;
+}
+
+
+/*General*/
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.specialChar {
+  font-family: serif;
+}
+
+
+hr {
+    margin-block: 2rem;
+}
+
+header {
+  background-color: var(--rtr-green-dark);
+  font-size: xx-large;
+  text-align: center;
+  padding: 1rem;
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  width: 100%;
+  color: var(--rtr-military-green);
+}
+
+h1 {
+    font-weight: 400;
+    font-size: xx-large;
+    margin: 0;
+    color: var(--rtr-green-dark);
+}
+
+footer {
+    background-color: var(--rtr-green-dark);
+    font-size: small;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    color: var(--rtr-military-green);
+    bottom: 0;
+    padding: 0.5rem max(3rem, 10%);
+    position:sticky;
+    position: -webkit-sticky;
+    width:100%;
+}
+
+footer span {
+    white-space: nowrap;
+    padding:0rem 1.5rem;
+    line-height: 2rem;
+}
+
+.dark-green {
+    color: var(--rtr-green-dark);
+}
+
+.dark-green:visited {
+    color: var(--rtr-green-dark);
+}
+
+.milt-green {
+    color: var(--rtr-military-green);
+}
+
+.milt-green:visited {
+    color: var(--rtr-military-green);
+}
+
+.error {
+    color: var(--rtr-red);
+}
+
+.success {
+    color: var(--rtr-seagreen);
+}
+
+.message {
+    color: var(--rtr-seagreen);
+}
+
+
+/*Form*/
+.form__field {
+    display: flex;
+    flex-direction: column;
+    margin-block: 1rem;
+}
+
+.form__label {
+    color: var(--rtr-green-dark);
+    font-size: large;
+}
+
+.form__input {
+    border-radius: 5px;
+    border: solid var(--rtr-green-dark) 1px;
+    background: none;
+    text-indent: 1rem;
+    padding: 0.5rem;
+    font-family: var(--font);
+    background-color: rgba(0,0,0,.05);
+    margin-top: 0.5rem;
+}
+
+.form__input:focus {
+    outline: none;
+    border: solid var(--rtr-seagreen) 1px;
+    background-color: var(--rtr-tan);
+}
+
+
+/*Button*/
+.btn {
+     border-radius: 12px;
+     border: solid var(--rtr-green-dark) 1px;
+     padding: 0.25rem 2rem;
+     font-size: large;
+     background: none;
+     font-family: var(--font);
+     cursor:pointer;
+}
+
+.btn:hover {
+     color: var(--rtr-tan);
+     background-color: var(--rtr-seagreen);
+     border: solid var(--rtr-seagreen) 1px;
+     transition: all 0.2s ease-in-out;
+}
+
+
+/*Login*/
+.login__form {
+    display: flex;
+    flex-direction: column;
+    width: 18rem;
+    padding-block: 2rem;
+    min-height: 80vh;
+}
+
+.login__actions {
+    margin-block: 2rem;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: large;
+}
+
+.login__alt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.login__alt-title {
+    overflow: hidden;
+    text-align: center;
+    white-space: nowrap;
+    font-weight: 400;
+    color: var(--rtr-green-dark);
+    font-size: large;
+    margin: 0;
+}
+
+.login__alt-title:before, .login__alt-title:after {
+      background-color: var(--rtr-green-dark);
+      content: "";
+      display: inline-block;
+      height: 1px;
+      position: relative;
+      vertical-align: middle;
+      min-width: 3.5rem;
+}
+
+.login__alt-title:before {
+    margin-right: 1rem;
+}
+
+.login__alt-title:after {
+    margin-left: 1rem;
+}
+
+.login__alt-link {
+    width: fit-content;
+    margin-block: 1rem;
+}
+
+.login__signup {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   margin-top: 1rem;
+}
+
+.login__signup-title {
+    overflow:visible;
+    text-align: center;
+    white-space: nowrap;
+    font-weight: 400;
+    color: var(--rtr-green-dark);
+    font-size: large;
+    margin: 0;
+}
+
+.login__signup-button {
+    margin-block: 2rem;
+}
+
+
+/*Sign Up*/
+.signup__form {
+    display: flex;
+    flex-direction: column;
+    width: 18rem;
+    padding-block: 2rem;
+    min-height: 80vh;
+}
+
+.signup__actions {
+    display: inline-block;
+}
+
+.signup__login-title {
+    overflow:visible;
+    text-align: center;
+    white-space: nowrap;
+    font-weight: 400;
+    color: var(--rtr-green-dark);
+    font-size: large;
+    margin: 0;
+}
+
+.signup__button {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    white-space: nowrap;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+
+/*Forgot Password*/
+.forgot-password__form {
+    display: flex;
+    flex-direction: column;
+    width: 18rem;
+    padding-block: 2rem;
+    min-height: 80vh;
+}
+
+.forgot-password__instruction {
+    color: var(--rtr-seagreen);
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.forgot-password__actions {
+    display: flex;
+    flex-direction: column;
+    margin-block: 2rem;
+    gap: 1rem;
+}
+
+.forgot-password__link {
+    overflow:visible;
+    white-space: nowrap;
+    font-weight: 400;
+    color: var(--rtr-green-dark);
+    font-size: large;
+    margin: 0;
+}
+
+
+/*Reset Password*/
+.reset-password__form {
+    display: flex;
+    flex-direction: column;
+    width: 18rem;
+    padding-block: 2rem;
+    min-height: 80vh;
+}
+
+.reset-password__form p {
+    margin-top: 1rem;
+}
+
+.reset-password__actions {
+    margin-top: 1rem;
+}
+
+.reset-password__link {
+    overflow:visible;
+    white-space: nowrap;
+    font-weight: 400;
+    color: var(--rtr-green-dark);
+    font-size: large;
+    margin: 0.5rem 0;
+}
+
+.reset-password__button {
+    margin-top: 1.5rem;
+}
+
+/*Reset Password*/
+.home {
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    width: 18rem;
+    padding-bottom: 2rem;
+    min-height: 85vh;
+
+}
+
+.home__actions {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 2rem;
+    align-items: center;
+}
+
+.home__actions h1 {
+    font-size: xxx-large;
+    font-style: italic;
+    margin-bottom: 1rem;
+}
+
+.home__actions-link {
+    min-width: 70%;
+    text-decoration: none;
+    font-size: x-large;
+    text-align: center
+}
+
+.home__actions-logout {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.home__actions button {
+    min-width: 92%;
+    font-size: x-large;
+    text-align: center
+}
+
+.home__user {
+    width: 90%;
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: flex-end;
+    color: var(--rtr-green-dark);
+}
+
+.home__user-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    gap: 0.5rem;
+}
+
+.home__user-info em{
+    font-weight: 500;
+}
+
+
+/*Account*/
+.account {
+    display: flex;
+    flex-direction: column;
+    width: 18rem;
+    padding-block: 2rem;
+    min-height: 80vh;
+}
+
+.account__form {
+    margin-block: 2rem;
+}
+
+.account__profile-title {
+    overflow: hidden;
+    text-align: center;
+    white-space: nowrap;
+    font-weight: 400;
+    color: var(--rtr-green-dark);
+    font-size: large;
+    margin: 0;
+}
+
+.account__profile-title:before, .account__profile-title:after {
+      background-color: var(--rtr-green-dark);
+      content: "";
+      display: inline-block;
+      height: 1px;
+      position: relative;
+      vertical-align: middle;
+      min-width: 1rem;
+}
+
+.account__profile-title:before {
+    margin-right: 1rem;
+}
+
+.account__profile-title:after {
+    margin-left: 1rem;
+}
+
+.account__password-title {
+    overflow: hidden;
+    text-align: center;
+    white-space: nowrap;
+    font-weight: 400;
+    color: var(--rtr-green-dark);
+    font-size: large;
+    margin: 0;
+}
+
+.account__password-title:before, .account__password-title:after {
+      background-color: var(--rtr-green-dark);
+      content: "";
+      display: inline-block;
+      height: 1px;
+      position: relative;
+      vertical-align: middle;
+      min-width: 3rem;
+}
+
+.account__password-title:before {
+    margin-right: 1rem;
+}
+
+.account__password-title:after {
+    margin-left: 1rem;
+}
+
+.account__button {
+    margin-top: 1.5rem;
+}
+
+.account__message {
+    margin-top: 1rem;
+}
