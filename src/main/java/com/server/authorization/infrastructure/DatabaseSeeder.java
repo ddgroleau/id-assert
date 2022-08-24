@@ -24,6 +24,9 @@ public class DatabaseSeeder implements CommandLineRunner {
     @Value("${identity.base.uri}")
     private String identityBaseUri;
 
+    @Value("${client.base.uri}")
+    private String clientBaseUrl;
+
     private final IdentityClientService identityClientService;
 
     public DatabaseSeeder(@Qualifier("registeredClientRepository") IdentityClientService identityClientService) {
@@ -41,7 +44,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                         defaultClientId,
                         defaultClientName,
                         defaultClientSecret,
-                        identityBaseUri
+                        clientBaseUrl
                 )
         );
         return;
